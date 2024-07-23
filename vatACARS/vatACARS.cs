@@ -18,7 +18,7 @@ namespace vatACARS
 {
     public static class AppData
     {
-        public static Version CurrentVersion { get; } = new Version(1, 0, 4);
+        public static Version CurrentVersion { get; } = new Version(1, 0, 4, 1);
     }
 
     [Export(typeof(IPlugin))]
