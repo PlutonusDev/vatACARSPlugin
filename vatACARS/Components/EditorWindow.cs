@@ -114,6 +114,11 @@ namespace vatACARS.Components
 
                 lvw_messages.Items.Add(lvMsg);
 
+                if (msg.Content.Contains("Cleared Flight Level Changed:"))
+                {
+                    Text = $"Sending to {msg.Station}";
+                }
+
                 if (msg.State == MessageState.Uplink || msg.State == MessageState.Finished || msg.State == MessageState.ADSC)
                 {
                     Text = $"Viewing Message from {msg.Station}";
@@ -510,7 +515,7 @@ namespace vatACARS.Components
                     if (resp.EndsWith("@")) resp = resp.Substring(0, resp.Length - 1);
                     FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", resp);
 
-                    if (selectedMsg.Content == "(no message received)")
+                    if (selectedMsg.Content == "(no message received)" || selectedMsg.Content.Contains("Cleared Flight Level Changed:"))
                     {
                         addSentCPDLCMessage(new SentCPDLCMessage()
                         {
