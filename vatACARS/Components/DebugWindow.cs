@@ -9,6 +9,8 @@ using vatACARS.Lib;
 using static vatACARS.Helpers.Transceiver;
 using static vatsys.Colours;
 using System.Linq;
+using static vatsys.CPDLC;
+using System.Net.Http;
 
 namespace vatACARS.Components
 {
@@ -170,35 +172,14 @@ namespace vatACARS.Components
 
         private void StyleComponent()
         {
-            lbl_messagecreate.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            lbl_messagecreate.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-
-            lbl_callsign.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            lbl_callsign.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-
-            lbl_content.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            lbl_content.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-
-            lbl_state.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            lbl_state.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-
-            lbl_type.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            lbl_type.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-
-            lbl_stationcreate.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            lbl_stationcreate.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-
-            lbl_stationc.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            lbl_stationc.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-
-            lbl_prov.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            lbl_prov.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-
-            lbl_netchecks.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            lbl_netchecks.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-
-            lbl_rdmstn.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            lbl_rdmstn.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            foreach (Control ctl in Controls)
+            {
+                if (ctl is TextLabel)
+                {
+                    ctl.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+                    ctl.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+                }
+            }
 
             dd_state.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
             dd_state.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
@@ -220,6 +201,56 @@ namespace vatACARS.Components
 
             btn_rdmstn.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
             btn_rdmstn.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+
+            btn_send.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+            btn_send.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+        }
+
+        private void DebugWindow_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btn_send_Click(object sender, EventArgs e)
+        {
+            FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(tbx_callsign.Text, "CPDLC", $"/data2/{tbx_msgid.Text}/{tbx_replyid.Text}/{tbx_response.Text}/{tbx_content2.Text}", true);
+            _ = HoppiesInterface.SendMessage(req);
+        }
+
+        private void btn_w_Click(object sender, EventArgs e)
+        {
+            tbx_response.Text = "N";
+            tbx_content2.Text = "WILCO";
+        }
+
+        private void btn_u_Click(object sender, EventArgs e)
+        {
+            tbx_response.Text = "N";
+            tbx_content2.Text = "UNABLE";
+        }
+
+        private void btn_s_Click(object sender, EventArgs e)
+        {
+            tbx_response.Text = "N";
+            tbx_content2.Text = "STANDBY";
+        }
+
+        private void btn_r_Click(object sender, EventArgs e)
+        {
+            tbx_response.Text = "N";
+            tbx_content2.Text = "ROGER";
+        }
+
+        private void btn_a_Click(object sender, EventArgs e)
+        {
+            tbx_response.Text = "N";
+            tbx_content2.Text = "AFFIRM";
+        }
+
+        private void btn_n_Click(object sender, EventArgs e)
+        {
+            tbx_response.Text = "N";
+            tbx_content2.Text = "NEGATIVE";
         }
     }
 }
