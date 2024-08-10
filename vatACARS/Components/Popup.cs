@@ -90,6 +90,37 @@ namespace vatACARS.Components
                 MMI.OpenDirectToMenu(FDR, MousePosition);
                 this.Close();
             }
+            if (!Direct && Content.Contains("flight level"))
+            {
+                try
+                {
+                    string formattedCFLString = (FDR.CFLString != null && int.Parse(FDR.CFLString) < 110
+                    ? "A"
+                    : "FL")
+                    + FDR.CFLString.PadLeft(3, '0');
+
+                    CPDLCMessage msg = new CPDLCMessage()
+                    {
+                        State = 0,
+                        Station = FDR.Callsign,
+                        Content = $"({FDR.Callsign}'s Cleared Flight Level Changed: {formattedCFLString})",
+                        TimeReceived = DateTime.UtcNow
+                    };
+
+                    DispatchWindow.SelectedMessage = msg;
+                    DispatchWindow.ShowEditorWindow(msg);
+                    this.Hide(); 
+
+                    Timer timer = new Timer(); // This is not the best way to do this.
+                    timer.Interval = 300000; 
+                    timer.Tick += (timerSender, timerEventArgs) => this.Close();
+                    timer.Start();
+                }
+                catch (Exception ex)
+                {
+                    errorHandler.AddError(ex.ToString());
+                }
+            }
         }
 
         private void btn_2_Click(object sender, EventArgs e)

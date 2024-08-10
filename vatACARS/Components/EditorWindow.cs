@@ -114,6 +114,11 @@ namespace vatACARS.Components
 
                 lvw_messages.Items.Add(lvMsg);
 
+                if (msg.Content.Contains("Cleared Flight Level Changed:"))
+                {
+                    Text = $"Sending to {msg.Station}";
+                }
+
                 if (msg.State == MessageState.Uplink || msg.State == MessageState.Finished || msg.State == MessageState.ADSC)
                 {
                     Text = $"Viewing Message from {msg.Station}";
@@ -498,17 +503,19 @@ namespace vatACARS.Components
                 }
                 else if (selectedMsg is CPDLCMessage message1)
                 {
-                    var responseCode = "N";
-                    if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "R")) responseCode = "R"; // TODO: Fix priorities here
-                    if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "Y")) responseCode = "Y";
+                    var responseCode = "NE";
                     if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "W/U")) responseCode = "WU";
+                    if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "A/N")) responseCode = "AN";
+                    if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "R")) responseCode = "R";
+                    if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "Y")) responseCode = "Y";
+                    if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "NE")) responseCode = "NE";
                     CPDLCMessage message = message1;
                     string encodedMessage = string.Join("\n", response.Where(obj => obj != null && obj.Entry != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element));
                     string resp = $"/data2/{SentMessages}/{message.MessageId}/{responseCode}/{encodedMessage}";
                     if (resp.EndsWith("@")) resp = resp.Substring(0, resp.Length - 1);
                     FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", resp);
 
-                    if (selectedMsg.Content == "(no message received)")
+                    if (selectedMsg.Content == "(no message received)" || selectedMsg.Content.Contains("Cleared Flight Level Changed:"))
                     {
                         addSentCPDLCMessage(new SentCPDLCMessage()
                         {

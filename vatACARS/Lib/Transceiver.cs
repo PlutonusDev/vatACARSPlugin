@@ -24,6 +24,7 @@ namespace vatACARS.Helpers
         private static List<CPDLCMessage> CPDLCMessages = new List<CPDLCMessage>();
         private static Logger logger = new Logger("Transceiver");
         private static List<SentCPDLCMessage> SentCPDLCMessages = new List<SentCPDLCMessage>();
+        private static List<(SentCPDLCMessage, DateTime)> recentSentCPDLCMessages = new List<(SentCPDLCMessage, DateTime)>();
         private static List<Station> Stations = new List<Station>();
         private static List<TelexMessage> TelexMessages = new List<TelexMessage>();
         private static PopupWindow PopupWindow;
@@ -97,6 +98,8 @@ namespace vatACARS.Helpers
         public static void addSentCPDLCMessage(SentCPDLCMessage message)
         {
             SentCPDLCMessages.Add(message);
+            recentSentCPDLCMessages.Add((message, DateTime.Now));
+            recentSentCPDLCMessages.RemoveAll(m => m.Item2 < DateTime.Now.AddMinutes(-5));
         }
 
         public static void addStation(Station station)
@@ -110,6 +113,10 @@ namespace vatACARS.Helpers
             {
                 ErrorHandler.GetInstance().AddError($"Station Already Exists: {station.Callsign}");
             }
+        }
+        public static List<SentCPDLCMessage> GetRecentSentCPDLCMessages()
+        {
+            return recentSentCPDLCMessages.Select(m => m.Item1).ToList();
         }
 
         public static void addTelexMessage(TelexMessage message)

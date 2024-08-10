@@ -38,6 +38,7 @@ namespace vatACARS
         private CustomToolStripMenuItem historyWindowMenu;
         private Dictionary<FDR, string> lastCFLStrings = new Dictionary<FDR, string>();
         private CustomToolStripMenuItem setupWindowMenu;
+        private static PopupWindow PopupWindow;
         private System.Timers.Timer UpdateTimer;
 
         // The following function runs on vatSys startup. Init code should be contained here.
@@ -208,8 +209,6 @@ namespace vatACARS
 
         private static void DoShowDebugWindow()
         {
-            try
-            {
                 if (debugWindow == null || debugWindow.IsDisposed)
                 {
                     debugWindow = new DebugWindow();
@@ -221,11 +220,6 @@ namespace vatACARS
 
                 debugWindow.Show(Form.ActiveForm);
             }
-            catch (Exception e)
-            {
-                ErrorHandler.GetInstance().AddError($"Error in DoShowHistoryWindow: {e.Message}");
-            }
-        }
 
         private static void DoShowDispatchWindow()
         {
@@ -243,8 +237,7 @@ namespace vatACARS
 
         private static void DoShowHistoryWindow()
         {
-            try
-            {
+
                 if (historyWindow == null || historyWindow.IsDisposed)
                 {
                     historyWindow = new HistoryWindow();
@@ -255,11 +248,6 @@ namespace vatACARS
                 }
 
                 historyWindow.Show(Form.ActiveForm);
-            }
-            catch (Exception e)
-            {
-                ErrorHandler.GetInstance().AddError($"Error in DoShowHistoryWindow: {e.Message}");
-            }
         }
 
         private void ActiveForm_KeyUp(object sender, KeyEventArgs e)
@@ -396,6 +384,39 @@ namespace vatACARS
             }
         }
 
+        private static void DoShowPopupWindow(string c, FDR fdr)
+        {
+            if (PopupWindow == null || PopupWindow.IsDisposed)
+            {
+                string formattedCFLString = (fdr.CFLString != null && int.Parse(fdr.CFLString) < 110
+                    ? "A"
+                    : "FL")
+                    + fdr.CFLString.PadLeft(3, '0');
+
+                c = $"Do you want to send a CPDLC message to {fdr.Callsign} to clear their flight level to {formattedCFLString}?";
+                PopupWindow = new PopupWindow(c.Trim(), false, fdr);
+            }
+            else if (PopupWindow.Visible)
+            {
+                return;
+            }
+
+            Form form = Form.ActiveForm;
+            if (form != null)
+            {
+                if (form.InvokeRequired)
+                {
+                    form.Invoke((Action)(() => PopupWindow.Show(form)));
+                }
+                else
+                {
+                    PopupWindow.Show(form);
+                }
+            }
+        }
+
+
+
         private void UpdateTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             List<FDR> fdrs = GetFDRs.ToList();
@@ -409,8 +430,18 @@ namespace vatACARS
                 if (fdr.CFLString != lastCFLString)
                 {
                     lastCFLStrings[fdr] = fdr.CFLString;
-                    // can use this to detect changes in the CFL string.
-                    // will make a use later.
+                    Station station = getAllStations().FirstOrDefault(Station => Station.Callsign == fdr.Callsign);
+                    if (station != null)
+                    {
+                        logger.Log("Station Connected Changed CFL?");
+                        var recentLevelMessages = GetRecentSentCPDLCMessages()
+                            .Where(m => m.Intent.Type == "LEVEL" && m.Station == station.Callsign);
+                        if (!recentLevelMessages.Any())
+                        {
+                            logger.Log($"Station: {station.Callsign} Updated there CFL with no expectation.");
+                            DoShowPopupWindow("CFL", fdr);
+                        }
+                    }
                 }
             }
         }

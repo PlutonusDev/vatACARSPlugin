@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Forms;
 
 namespace vatACARS.Components
 {
@@ -123,7 +124,7 @@ namespace vatACARS.Components
             this.dd_acids.BackColor = System.Drawing.SystemColors.ControlDark;
             this.dd_acids.FocusColor = System.Drawing.Color.Cyan;
             this.dd_acids.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.dd_acids.Items = ((System.Collections.ObjectModel.ObservableCollection<string>)(resources.GetObject("dd_acids.Items")));
+            this.dd_acids.Items = new ObservableCollection<string>();
             this.dd_acids.Location = new System.Drawing.Point(65, 9);
             this.dd_acids.Name = "dd_acids";
             this.dd_acids.SelectedIndex = -1;

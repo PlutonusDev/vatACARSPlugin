@@ -38,7 +38,7 @@
             this.btn_2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_2.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.btn_2.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btn_2.Location = new System.Drawing.Point(138, 59);
+            this.btn_2.Location = new System.Drawing.Point(156, 92);
             this.btn_2.Name = "btn_2";
             this.btn_2.Size = new System.Drawing.Size(90, 28);
             this.btn_2.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -52,7 +52,7 @@
             this.btn_1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btn_1.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.btn_1.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btn_1.Location = new System.Drawing.Point(12, 59);
+            this.btn_1.Location = new System.Drawing.Point(12, 92);
             this.btn_1.Name = "btn_1";
             this.btn_1.Size = new System.Drawing.Size(90, 28);
             this.btn_1.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -67,13 +67,13 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_content.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.lbl_content.Font = new System.Drawing.Font("Terminus (TTF)", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_content.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lbl_content.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_content.HasBorder = false;
             this.lbl_content.InteractiveText = true;
             this.lbl_content.Location = new System.Drawing.Point(12, 9);
             this.lbl_content.Name = "lbl_content";
-            this.lbl_content.Size = new System.Drawing.Size(216, 47);
+            this.lbl_content.Size = new System.Drawing.Size(234, 80);
             this.lbl_content.TabIndex = 3;
             this.lbl_content.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -81,7 +81,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(240, 99);
+            this.ClientSize = new System.Drawing.Size(258, 132);
             this.ControlBox = false;
             this.Controls.Add(this.lbl_content);
             this.Controls.Add(this.btn_1);
