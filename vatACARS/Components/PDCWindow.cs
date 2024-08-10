@@ -182,6 +182,8 @@ namespace vatACARS.Components
 
         private void LoadDepFreq()
         {
+            dd_freq.Items.Add("UNICOM 122.800");
+            dd_freq2.Items.Add("UNICOM 122.800");
             List<string> freqs = new List<string>();
 
             foreach (VSCSFrequency vscsFrequency in (IEnumerable<VSCSFrequency>)Audio.VSCSFrequencies)

@@ -180,9 +180,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Components\HistoryWindow.resx">
-      <DependentUpon>HistoryWindow.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Components\DispatchWindow.resx">
       <DependentUpon>DispatchWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -193,9 +190,6 @@
     <EmbeddedResource Include="Components\ErrorWindow.resx">
       <DependentUpon>ErrorWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Components\DebugWindow.resx">
-      <DependentUpon>DebugWindow.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Components\HandoffSelector.resx">
       <DependentUpon>HandoffSelector.cs</DependentUpon>
     </EmbeddedResource>
@@ -204,9 +198,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Components\Popup.resx">
       <DependentUpon>Popup.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Components\PDCWindow.resx">
-      <DependentUpon>PDCWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Components\QuickFillWindow.resx">
       <DependentUpon>QuickFillWindow.cs</DependentUpon>

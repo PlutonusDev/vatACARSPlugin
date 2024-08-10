@@ -158,6 +158,15 @@ namespace vatACARS.Components
             btn_netchecks.Text = Properties.Settings.Default.netChecks ? "\u2713" : "";
             btn_netchecks.Invalidate();
             SetChecks(Properties.Settings.Default.netChecks);
+            dd_type.Items.Add("TelexMessage");
+            dd_type.Items.Add("CPDLCMessage");
+            dd_state.Items.Add("0");
+            dd_state.Items.Add("1");
+            dd_state.Items.Add("2");
+            dd_state.Items.Add("3");
+            dd_state.Items.Add("4");
+            dd_prov.Items.Add("0");
+            dd_prov.Items.Add("1");
         }
 
         private void RandomStn()

@@ -209,8 +209,6 @@ namespace vatACARS
 
         private static void DoShowDebugWindow()
         {
-            try
-            {
                 if (debugWindow == null || debugWindow.IsDisposed)
                 {
                     debugWindow = new DebugWindow();
@@ -222,11 +220,6 @@ namespace vatACARS
 
                 debugWindow.Show(Form.ActiveForm);
             }
-            catch (Exception e)
-            {
-                ErrorHandler.GetInstance().AddError($"Error in DoShowHistoryWindow: {e.Message}");
-            }
-        }
 
         private static void DoShowDispatchWindow()
         {
@@ -244,8 +237,7 @@ namespace vatACARS
 
         private static void DoShowHistoryWindow()
         {
-            try
-            {
+
                 if (historyWindow == null || historyWindow.IsDisposed)
                 {
                     historyWindow = new HistoryWindow();
@@ -256,11 +248,6 @@ namespace vatACARS
                 }
 
                 historyWindow.Show(Form.ActiveForm);
-            }
-            catch (Exception e)
-            {
-                ErrorHandler.GetInstance().AddError($"Error in DoShowHistoryWindow: {e.Message}");
-            }
         }
 
         private void ActiveForm_KeyUp(object sender, KeyEventArgs e)

@@ -1,4 +1,7 @@
-﻿namespace vatACARS.Components
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+namespace vatACARS.Components
 {
     partial class DebugWindow
     {
@@ -112,7 +115,7 @@
             this.dd_type.BackColor = System.Drawing.SystemColors.ControlDark;
             this.dd_type.FocusColor = System.Drawing.Color.Cyan;
             this.dd_type.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.dd_type.Items = ((System.Collections.Generic.IList<string>)(resources.GetObject("dd_type.Items")));
+            this.dd_type.Items = new ObservableCollection<string>();
             this.dd_type.Location = new System.Drawing.Point(205, 94);
             this.dd_type.Name = "dd_type";
             this.dd_type.SelectedIndex = -1;
@@ -152,7 +155,7 @@
             this.dd_state.BackColor = System.Drawing.SystemColors.ControlDark;
             this.dd_state.FocusColor = System.Drawing.Color.Cyan;
             this.dd_state.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.dd_state.Items = ((System.Collections.Generic.IList<string>)(resources.GetObject("dd_state.Items")));
+            this.dd_state.Items = new ObservableCollection<string>();
             this.dd_state.Location = new System.Drawing.Point(81, 94);
             this.dd_state.Name = "dd_state";
             this.dd_state.SelectedIndex = -1;
@@ -291,7 +294,7 @@
             this.dd_prov.BackColor = System.Drawing.SystemColors.ControlDark;
             this.dd_prov.FocusColor = System.Drawing.Color.Cyan;
             this.dd_prov.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.dd_prov.Items = ((System.Collections.Generic.IList<string>)(resources.GetObject("dd_prov.Items")));
+            this.dd_prov.Items = new ObservableCollection<string>();
             this.dd_prov.Location = new System.Drawing.Point(283, 32);
             this.dd_prov.Name = "dd_prov";
             this.dd_prov.SelectedIndex = -1;
