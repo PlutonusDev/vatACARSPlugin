@@ -38,7 +38,6 @@ namespace vatACARS
         private CustomToolStripMenuItem historyWindowMenu;
         private Dictionary<FDR, string> lastCFLStrings = new Dictionary<FDR, string>();
         private CustomToolStripMenuItem setupWindowMenu;
-        private static PopupWindow PopupWindow;
         private System.Timers.Timer UpdateTimer;
 
         // The following function runs on vatSys startup. Init code should be contained here.
@@ -386,36 +385,25 @@ namespace vatACARS
 
         private static void DoShowPopupWindow(string c, FDR fdr)
         {
-            if (PopupWindow == null || PopupWindow.IsDisposed)
-            {
-                string formattedCFLString = (fdr.CFLString != null && int.Parse(fdr.CFLString) < 110
-                    ? "A"
-                    : "FL")
-                    + fdr.CFLString.PadLeft(3, '0');
+            string formattedCFLString = (fdr.CFLString != null && int.Parse(fdr.CFLString) < 110
+                ? "A"
+                : "FL") + fdr.CFLString.PadLeft(3, '0');
+            c = $"Do you want to send a CPDLC message to {fdr.Callsign} to clear their flight level to {formattedCFLString}?";
 
-                c = $"Do you want to send a CPDLC message to {fdr.Callsign} to clear their flight level to {formattedCFLString}?";
-                PopupWindow = new PopupWindow(c.Trim(), false, fdr);
-            }
-            else if (PopupWindow.Visible)
-            {
-                return;
-            }
-
+            PopupWindow newPopupWindow = new PopupWindow(c.Trim(), false, fdr);
             Form form = Form.ActiveForm;
             if (form != null)
             {
                 if (form.InvokeRequired)
                 {
-                    form.Invoke((Action)(() => PopupWindow.Show(form)));
+                    form.Invoke((Action)(() => newPopupWindow.Show(form)));
                 }
                 else
                 {
-                    PopupWindow.Show(form);
+                    newPopupWindow.Show(form);
                 }
             }
         }
-
-
 
         private void UpdateTimer_Elapsed(object sender, ElapsedEventArgs e)
         {

@@ -27,7 +27,6 @@ namespace vatACARS.Helpers
         private static List<(SentCPDLCMessage, DateTime)> recentSentCPDLCMessages = new List<(SentCPDLCMessage, DateTime)>();
         private static List<Station> Stations = new List<Station>();
         private static List<TelexMessage> TelexMessages = new List<TelexMessage>();
-        private static PopupWindow PopupWindow;
 
         public static event EventHandler<CPDLCMessage> CPDLCMessageReceived;
 
@@ -283,34 +282,23 @@ namespace vatACARS.Helpers
             {
                 return;
             }
-            if (PopupWindow == null || PopupWindow.IsDisposed)
-            {
-                c = "UPDATE " + fdr.Callsign + " DIRECT TO: " + c + "?";
-                PopupWindow = new PopupWindow(c, true, fdr);
-            }
-            else if (PopupWindow.Visible)
-            {
-                return;
-            }
 
+            string formattedContent = $"UPDATE {fdr.Callsign} DIRECT TO: {c}?";
+            PopupWindow newPopupWindow = new PopupWindow(formattedContent, true, fdr);
             Form form = Form.ActiveForm;
             if (form != null)
             {
                 if (form.InvokeRequired)
                 {
-                    form.Invoke((Action)(() => PopupWindow.Show(form)));
+                    form.Invoke((Action)(() => newPopupWindow.Show(form)));
                 }
                 else
                 {
-                    PopupWindow.Show(form);
+                    newPopupWindow.Show(form);
                 }
             }
-            else
-            {
-
-                logger.Log("Form.ActiveForm is null");
-            }
         }
+
         private static void removeMessage(this IMessageData message)
         {
             if (message is CPDLCMessage) CPDLCMessages.Remove((CPDLCMessage)message);
