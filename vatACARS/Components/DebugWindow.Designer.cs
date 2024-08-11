@@ -202,6 +202,8 @@ namespace vatACARS.Components
             this.tbx_station.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbx_station.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.tbx_station.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             this.tbx_station.BackColor = System.Drawing.SystemColors.ControlDark;
             this.tbx_station.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.tbx_station.ForeColor = System.Drawing.SystemColors.ControlDark;
@@ -211,6 +213,7 @@ namespace vatACARS.Components
             this.tbx_station.OctalOnly = false;
             this.tbx_station.Size = new System.Drawing.Size(107, 25);
             this.tbx_station.TabIndex = 30;
+            this.tbx_station.TextChanged += new System.EventHandler(this.tbx_station_TextChanged);
             // 
             // lbl_callsign
             // 
@@ -328,6 +331,8 @@ namespace vatACARS.Components
             this.tbx_stationc.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbx_stationc.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.tbx_stationc.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             this.tbx_stationc.BackColor = System.Drawing.SystemColors.ControlDark;
             this.tbx_stationc.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.tbx_stationc.ForeColor = System.Drawing.SystemColors.ControlDark;
@@ -337,6 +342,7 @@ namespace vatACARS.Components
             this.tbx_stationc.OctalOnly = false;
             this.tbx_stationc.Size = new System.Drawing.Size(107, 25);
             this.tbx_stationc.TabIndex = 30;
+            this.tbx_stationc.TextChanged += new System.EventHandler(this.tbx_stationc_TextChanged);
             // 
             // lbl_stationc
             // 
@@ -517,7 +523,7 @@ namespace vatACARS.Components
             this.tbx_response.BackColor = System.Drawing.SystemColors.ControlDark;
             this.tbx_response.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.tbx_response.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.tbx_response.Location = new System.Drawing.Point(319, 56);
+            this.tbx_response.Location = new System.Drawing.Point(329, 56);
             this.tbx_response.Name = "tbx_response";
             this.tbx_response.NumericCharOnly = false;
             this.tbx_response.OctalOnly = false;
@@ -561,7 +567,7 @@ namespace vatACARS.Components
             this.tbx_replyid.BackColor = System.Drawing.SystemColors.ControlDark;
             this.tbx_replyid.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.tbx_replyid.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.tbx_replyid.Location = new System.Drawing.Point(280, 30);
+            this.tbx_replyid.Location = new System.Drawing.Point(291, 27);
             this.tbx_replyid.Name = "tbx_replyid";
             this.tbx_replyid.NumericCharOnly = false;
             this.tbx_replyid.OctalOnly = false;
@@ -590,7 +596,7 @@ namespace vatACARS.Components
             this.tbx_msgid.BackColor = System.Drawing.SystemColors.ControlDark;
             this.tbx_msgid.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.tbx_msgid.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.tbx_msgid.Location = new System.Drawing.Point(81, 56);
+            this.tbx_msgid.Location = new System.Drawing.Point(81, 55);
             this.tbx_msgid.Name = "tbx_msgid";
             this.tbx_msgid.NumericCharOnly = false;
             this.tbx_msgid.OctalOnly = false;
@@ -629,15 +635,18 @@ namespace vatACARS.Components
             this.tbx_callsign.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbx_callsign.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.tbx_callsign.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             this.tbx_callsign.BackColor = System.Drawing.SystemColors.ControlDark;
             this.tbx_callsign.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.tbx_callsign.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.tbx_callsign.Location = new System.Drawing.Point(81, 32);
+            this.tbx_callsign.Location = new System.Drawing.Point(81, 27);
             this.tbx_callsign.Name = "tbx_callsign";
             this.tbx_callsign.NumericCharOnly = false;
             this.tbx_callsign.OctalOnly = false;
             this.tbx_callsign.Size = new System.Drawing.Size(107, 25);
             this.tbx_callsign.TabIndex = 30;
+            this.tbx_callsign.TextChanged += new System.EventHandler(this.tbx_callsign_TextChanged);
             // 
             // lbl_call
             // 

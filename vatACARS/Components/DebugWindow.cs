@@ -51,6 +51,22 @@ namespace vatACARS.Components
         private int provider;
         public DebugWindow()
         {
+            Timer timer = new Timer();
+            timer.Interval = 15000;
+            timer.Tick += new EventHandler((sender, e) =>
+            {
+                tbx_station.AutoCompleteCustomSource.Clear();
+                tbx_stationc.AutoCompleteCustomSource.Clear();
+                tbx_callsign.AutoCompleteCustomSource.Clear();
+                foreach (Station station in getAllStations())
+                {
+                    tbx_station.AutoCompleteCustomSource.Add(station.Callsign);
+                    tbx_stationc.AutoCompleteCustomSource.Add(station.Callsign);
+                    tbx_callsign.AutoCompleteCustomSource.Add(station.Callsign);
+                }
+            });
+
+            timer.Start(); 
             InitializeComponent();
             StyleComponent();
         }
@@ -158,8 +174,8 @@ namespace vatACARS.Components
             btn_netchecks.Text = Properties.Settings.Default.netChecks ? "\u2713" : "";
             btn_netchecks.Invalidate();
             SetChecks(Properties.Settings.Default.netChecks);
-            tbx_type.AutoCompleteCustomSource.Add("TELEXMESSAGE");
-            tbx_type.AutoCompleteCustomSource.Add("CPDLCMESSAGE");
+            tbx_type.AutoCompleteCustomSource.Add("TelexMessage");
+            tbx_type.AutoCompleteCustomSource.Add("CPDLCMessage");
             tbx_state.AutoCompleteCustomSource.Add("0");
             tbx_state.AutoCompleteCustomSource.Add("1");
             tbx_state.AutoCompleteCustomSource.Add("2");
@@ -299,6 +315,24 @@ namespace vatACARS.Components
         {
             tbx_response.Text = "N";
             tbx_content2.Text = "NEGATIVE";
+        }
+
+        private void tbx_station_TextChanged(object sender, EventArgs e)
+        {
+            tbx_station.Text = tbx_station.Text.ToUpper();
+            tbx_station.SelectionStart = tbx_station.Text.Length;
+        }
+
+        private void tbx_stationc_TextChanged(object sender, EventArgs e)
+        {
+            tbx_stationc.Text = tbx_stationc.Text.ToUpper();
+            tbx_stationc.SelectionStart = tbx_stationc.Text.Length;
+        }
+
+        private void tbx_callsign_TextChanged(object sender, EventArgs e)
+        {
+            tbx_callsign.Text = tbx_callsign.Text.ToUpper();
+            tbx_callsign.SelectionStart = tbx_callsign.Text.Length;
         }
     }
 }

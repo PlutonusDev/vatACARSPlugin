@@ -163,6 +163,7 @@ namespace vatACARS.Components
             this.scr_messageSelector.Location = new System.Drawing.Point(559, 205);
             this.scr_messageSelector.Name = "scr_messageSelector";
             this.scr_messageSelector.Orientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
+            this.scr_messageSelector.PercentageValue = 0F;
             this.scr_messageSelector.PreferredHeight = 8;
             this.scr_messageSelector.Size = new System.Drawing.Size(17, 176);
             this.scr_messageSelector.TabIndex = 5;
@@ -442,13 +443,13 @@ namespace vatACARS.Components
             // 
             this.btn_send.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btn_send.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_send.Location = new System.Drawing.Point(466, 580);
+            this.btn_send.Location = new System.Drawing.Point(415, 580);
             this.btn_send.Name = "btn_send";
-            this.btn_send.Size = new System.Drawing.Size(111, 28);
+            this.btn_send.Size = new System.Drawing.Size(162, 28);
             this.btn_send.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_send.SubText = "";
             this.btn_send.TabIndex = 23;
-            this.btn_send.Text = "Send";
+            this.btn_send.Text = "Send to";
             this.btn_send.UseVisualStyleBackColor = true;
             this.btn_send.Click += new System.EventHandler(this.btn_send_Click);
             // 
