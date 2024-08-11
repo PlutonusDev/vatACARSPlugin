@@ -31,14 +31,13 @@ namespace vatACARS.Components
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HistoryWindow));
             this.insetPanel2 = new vatsys.InsetPanel();
             this.lvw_messages = new vatsys.ListViewEx();
             this.col_timestamp = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.col_message = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.scr_messages = new VATSYSControls.ScrollBar();
             this.lbl_acid = new vatsys.TextLabel();
-            this.dd_acids = new VATSYSControls.DropDownBox();
+            this.tbx_acid = new vatsys.TextField();
             this.insetPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -97,6 +96,7 @@ namespace vatACARS.Components
             this.scr_messages.Location = new System.Drawing.Point(508, 52);
             this.scr_messages.Name = "scr_messages";
             this.scr_messages.Orientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
+            this.scr_messages.PercentageValue = 0F;
             this.scr_messages.PreferredHeight = 10;
             this.scr_messages.Size = new System.Drawing.Size(20, 250);
             this.scr_messages.TabIndex = 5;
@@ -119,25 +119,27 @@ namespace vatACARS.Components
             this.lbl_acid.Text = "ACID: ";
             this.lbl_acid.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // dd_acids
+            // tbx_acid
             // 
-            this.dd_acids.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.dd_acids.FocusColor = System.Drawing.Color.Cyan;
-            this.dd_acids.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.dd_acids.Items = new ObservableCollection<string>();
-            this.dd_acids.Location = new System.Drawing.Point(65, 9);
-            this.dd_acids.Name = "dd_acids";
-            this.dd_acids.SelectedIndex = -1;
-            this.dd_acids.Size = new System.Drawing.Size(92, 25);
-            this.dd_acids.TabIndex = 103;
-            this.dd_acids.SelectedIndexChanged += new System.EventHandler(this.dd_acids_SelectedIndexChanged);
+            this.tbx_acid.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.tbx_acid.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.tbx_acid.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.tbx_acid.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.tbx_acid.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.tbx_acid.Location = new System.Drawing.Point(65, 9);
+            this.tbx_acid.Name = "tbx_acid";
+            this.tbx_acid.NumericCharOnly = false;
+            this.tbx_acid.OctalOnly = false;
+            this.tbx_acid.Size = new System.Drawing.Size(92, 25);
+            this.tbx_acid.TabIndex = 104;
+            this.tbx_acid.TextChanged += new System.EventHandler(this.tbx_acid_TextChanged);
             // 
             // HistoryWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(533, 314);
-            this.Controls.Add(this.dd_acids);
+            this.Controls.Add(this.tbx_acid);
             this.Controls.Add(this.lbl_acid);
             this.Controls.Add(this.scr_messages);
             this.Controls.Add(this.insetPanel2);
@@ -153,6 +155,7 @@ namespace vatACARS.Components
             this.SizeChanged += new System.EventHandler(this.HistoryWindow_SizeChanged);
             this.insetPanel2.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -163,6 +166,6 @@ namespace vatACARS.Components
         private System.Windows.Forms.ColumnHeader col_message;
         private System.Windows.Forms.ColumnHeader col_timestamp;
         private vatsys.TextLabel lbl_acid;
-        private VATSYSControls.DropDownBox dd_acids;
+        private vatsys.TextField tbx_acid;
     }
 }
