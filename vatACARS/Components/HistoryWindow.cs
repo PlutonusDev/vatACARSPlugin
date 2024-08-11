@@ -51,17 +51,8 @@ namespace vatACARS.Components
             if (!stations.Contains(station))
             {
                 stations.Add(station);
-                dd_acids.Items.Add(station.Callsign);
+                tbx_acid.AutoCompleteCustomSource.Add(station.Callsign);
             }
-        }
-
-        private void dd_acids_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            lvw_messages.Items.Clear();
-            lvw_messages.Invalidate();
-            string selectedCallsign = dd_acids.Text;
-            SelectedStation = stations.FirstOrDefault(s => s.Callsign == selectedCallsign);
-            LoadHistoryForSelectedStation();
         }
 
         private void HistoryWindow_Load(object sender, EventArgs e)
@@ -174,9 +165,8 @@ namespace vatACARS.Components
 
         private void StyleComponent()
         {
-            dd_acids.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            dd_acids.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-            dd_acids.FocusColor = Color.Cyan;
+            tbx_acid.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            tbx_acid.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
             scr_messages.ForeColor = Colours.GetColour(Colours.Identities.WindowBackground);
             scr_messages.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
             scr_messages.PreferredHeight = 1;
@@ -195,7 +185,7 @@ namespace vatACARS.Components
                 Invoke(new Action(() => UpdateCPDLCList(sender, message)));
                 return;
             }
-            dd_acids_SelectedIndexChanged(sender, EventArgs.Empty);
+            tbx_acid_TextChanged(sender, EventArgs.Empty);
         }
 
         private void UpdateList(object sender, IMessageData message)
@@ -205,7 +195,7 @@ namespace vatACARS.Components
                 Invoke(new Action(() => UpdateList(sender, message)));
                 return;
             }
-            dd_acids_SelectedIndexChanged(sender, EventArgs.Empty);
+            tbx_acid_TextChanged(sender, EventArgs.Empty);
         }
 
         private void UpdateMessages()
@@ -214,13 +204,13 @@ namespace vatACARS.Components
             if (stationList != null)
             {
                 stations.Clear();
-                dd_acids.Items.Clear();
+                tbx_acid.AutoCompleteCustomSource.Clear();
                 foreach (var station in stationList)
                 {
                     AddStation(station);
                 }
             }
-            dd_acids_SelectedIndexChanged(null, EventArgs.Empty);
+            tbx_acid_TextChanged(null, EventArgs.Empty);
         }
 
         private void UpdateStationsList(object sender, Station station)
@@ -240,7 +230,21 @@ namespace vatACARS.Components
                 Invoke(new Action(() => UpdateTelexList(sender, message)));
                 return;
             }
-            dd_acids_SelectedIndexChanged(sender, EventArgs.Empty);
+            tbx_acid_TextChanged(sender, EventArgs.Empty);
+        }
+
+        private void tbx_acid_TextChanged(object sender, EventArgs e)
+        {
+            tbx_acid.Text = tbx_acid.Text.ToUpper();
+            tbx_acid.SelectionStart = tbx_acid.Text.Length;
+            lvw_messages.Items.Clear();
+            lvw_messages.Invalidate();
+            string selectedCallsign = tbx_acid.Text;
+            SelectedStation = stations.FirstOrDefault(s => s.Callsign == selectedCallsign);
+            if (SelectedStation != null)
+            {
+                LoadHistoryForSelectedStation();
+            }
         }
     }
 }

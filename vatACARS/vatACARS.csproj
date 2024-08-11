@@ -180,6 +180,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Components\DebugWindow.resx">
+      <DependentUpon>DebugWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Components\DispatchWindow.resx">
       <DependentUpon>DispatchWindow.cs</DependentUpon>
     </EmbeddedResource>

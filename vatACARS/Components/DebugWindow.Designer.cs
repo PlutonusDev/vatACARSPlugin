@@ -34,20 +34,20 @@ namespace vatACARS.Components
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DebugWindow));
             this.tbx_content = new vatsys.TextField();
             this.insetPanel2 = new vatsys.InsetPanel();
-            this.dd_type = new VATSYSControls.DropDownBox();
+            this.tbx_type = new vatsys.TextField();
+            this.tbx_state = new vatsys.TextField();
             this.lbl_type = new vatsys.TextLabel();
             this.btn_add = new vatsys.GenericButton();
-            this.dd_state = new VATSYSControls.DropDownBox();
             this.lbl_state = new vatsys.TextLabel();
             this.lbl_content = new vatsys.TextLabel();
             this.tbx_station = new vatsys.TextField();
             this.lbl_callsign = new vatsys.TextLabel();
             this.lbl_messagecreate = new vatsys.TextLabel();
             this.insetPanel1 = new vatsys.InsetPanel();
+            this.tbx_prov = new vatsys.TextField();
             this.lbl_rdmstn = new vatsys.TextLabel();
             this.btn_rdmstn = new vatsys.GenericButton();
             this.lbl_prov = new vatsys.TextLabel();
-            this.dd_prov = new VATSYSControls.DropDownBox();
             this.btn_screate = new vatsys.GenericButton();
             this.tbx_stationc = new vatsys.TextField();
             this.lbl_stationc = new vatsys.TextLabel();
@@ -55,6 +55,11 @@ namespace vatACARS.Components
             this.btn_netchecks = new vatsys.GenericButton();
             this.lbl_netchecks = new vatsys.TextLabel();
             this.insetPanel3 = new vatsys.InsetPanel();
+            this.btn_n = new vatsys.GenericButton();
+            this.btn_a = new vatsys.GenericButton();
+            this.btn_r = new vatsys.GenericButton();
+            this.btn_s = new vatsys.GenericButton();
+            this.btn_u = new vatsys.GenericButton();
             this.btn_w = new vatsys.GenericButton();
             this.lbl_content2 = new vatsys.TextLabel();
             this.tbx_response = new vatsys.TextField();
@@ -68,14 +73,12 @@ namespace vatACARS.Components
             this.tbx_callsign = new vatsys.TextField();
             this.lbl_call = new vatsys.TextLabel();
             this.lbl_pilotres = new vatsys.TextLabel();
-            this.btn_u = new vatsys.GenericButton();
-            this.btn_s = new vatsys.GenericButton();
-            this.btn_r = new vatsys.GenericButton();
-            this.btn_a = new vatsys.GenericButton();
-            this.btn_n = new vatsys.GenericButton();
+            this.lbl_intrc = new vatsys.TextLabel();
+            this.insetPanel4 = new vatsys.InsetPanel();
             this.insetPanel2.SuspendLayout();
             this.insetPanel1.SuspendLayout();
             this.insetPanel3.SuspendLayout();
+            this.insetPanel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbx_content
@@ -95,10 +98,10 @@ namespace vatACARS.Components
             // 
             // insetPanel2
             // 
-            this.insetPanel2.Controls.Add(this.dd_type);
+            this.insetPanel2.Controls.Add(this.tbx_type);
+            this.insetPanel2.Controls.Add(this.tbx_state);
             this.insetPanel2.Controls.Add(this.lbl_type);
             this.insetPanel2.Controls.Add(this.btn_add);
-            this.insetPanel2.Controls.Add(this.dd_state);
             this.insetPanel2.Controls.Add(this.lbl_state);
             this.insetPanel2.Controls.Add(this.lbl_content);
             this.insetPanel2.Controls.Add(this.tbx_station);
@@ -110,17 +113,33 @@ namespace vatACARS.Components
             this.insetPanel2.Size = new System.Drawing.Size(457, 128);
             this.insetPanel2.TabIndex = 17;
             // 
-            // dd_type
+            // tbx_type
             // 
-            this.dd_type.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.dd_type.FocusColor = System.Drawing.Color.Cyan;
-            this.dd_type.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.dd_type.Items = new ObservableCollection<string>();
-            this.dd_type.Location = new System.Drawing.Point(205, 94);
-            this.dd_type.Name = "dd_type";
-            this.dd_type.SelectedIndex = -1;
-            this.dd_type.Size = new System.Drawing.Size(131, 25);
-            this.dd_type.TabIndex = 108;
+            this.tbx_type.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.tbx_type.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.tbx_type.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.tbx_type.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.tbx_type.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.tbx_type.Location = new System.Drawing.Point(205, 92);
+            this.tbx_type.Name = "tbx_type";
+            this.tbx_type.NumericCharOnly = false;
+            this.tbx_type.OctalOnly = false;
+            this.tbx_type.Size = new System.Drawing.Size(131, 25);
+            this.tbx_type.TabIndex = 110;
+            // 
+            // tbx_state
+            // 
+            this.tbx_state.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.tbx_state.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.tbx_state.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.tbx_state.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.tbx_state.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.tbx_state.Location = new System.Drawing.Point(81, 93);
+            this.tbx_state.Name = "tbx_state";
+            this.tbx_state.NumericCharOnly = false;
+            this.tbx_state.OctalOnly = false;
+            this.tbx_state.Size = new System.Drawing.Size(40, 25);
+            this.tbx_state.TabIndex = 109;
             // 
             // lbl_type
             // 
@@ -149,18 +168,6 @@ namespace vatACARS.Components
             this.btn_add.Text = "ADD MESSAGE";
             this.btn_add.UseVisualStyleBackColor = true;
             this.btn_add.Click += new System.EventHandler(this.btn_add_Click);
-            // 
-            // dd_state
-            // 
-            this.dd_state.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.dd_state.FocusColor = System.Drawing.Color.Cyan;
-            this.dd_state.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.dd_state.Items = new ObservableCollection<string>();
-            this.dd_state.Location = new System.Drawing.Point(81, 94);
-            this.dd_state.Name = "dd_state";
-            this.dd_state.SelectedIndex = -1;
-            this.dd_state.Size = new System.Drawing.Size(40, 25);
-            this.dd_state.TabIndex = 103;
             // 
             // lbl_state
             // 
@@ -235,10 +242,10 @@ namespace vatACARS.Components
             // 
             // insetPanel1
             // 
+            this.insetPanel1.Controls.Add(this.tbx_prov);
             this.insetPanel1.Controls.Add(this.lbl_rdmstn);
             this.insetPanel1.Controls.Add(this.btn_rdmstn);
             this.insetPanel1.Controls.Add(this.lbl_prov);
-            this.insetPanel1.Controls.Add(this.dd_prov);
             this.insetPanel1.Controls.Add(this.btn_screate);
             this.insetPanel1.Controls.Add(this.tbx_stationc);
             this.insetPanel1.Controls.Add(this.lbl_stationc);
@@ -247,6 +254,20 @@ namespace vatACARS.Components
             this.insetPanel1.Name = "insetPanel1";
             this.insetPanel1.Size = new System.Drawing.Size(457, 97);
             this.insetPanel1.TabIndex = 109;
+            // 
+            // tbx_prov
+            // 
+            this.tbx_prov.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.tbx_prov.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.tbx_prov.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.tbx_prov.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.tbx_prov.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.tbx_prov.Location = new System.Drawing.Point(283, 32);
+            this.tbx_prov.Name = "tbx_prov";
+            this.tbx_prov.NumericCharOnly = false;
+            this.tbx_prov.OctalOnly = false;
+            this.tbx_prov.Size = new System.Drawing.Size(40, 25);
+            this.tbx_prov.TabIndex = 111;
             // 
             // lbl_rdmstn
             // 
@@ -288,18 +309,6 @@ namespace vatACARS.Components
             this.lbl_prov.TabIndex = 109;
             this.lbl_prov.Text = "PROVIDER:";
             this.lbl_prov.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // dd_prov
-            // 
-            this.dd_prov.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.dd_prov.FocusColor = System.Drawing.Color.Cyan;
-            this.dd_prov.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.dd_prov.Items = new ObservableCollection<string>();
-            this.dd_prov.Location = new System.Drawing.Point(283, 32);
-            this.dd_prov.Name = "dd_prov";
-            this.dd_prov.SelectedIndex = -1;
-            this.dd_prov.Size = new System.Drawing.Size(40, 25);
-            this.dd_prov.TabIndex = 109;
             // 
             // btn_screate
             // 
@@ -345,7 +354,7 @@ namespace vatACARS.Components
             // 
             // lbl_stationcreate
             // 
-            this.lbl_stationcreate.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_stationcreate.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.lbl_stationcreate.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lbl_stationcreate.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_stationcreate.HasBorder = false;
@@ -407,6 +416,71 @@ namespace vatACARS.Components
             this.insetPanel3.Name = "insetPanel3";
             this.insetPanel3.Size = new System.Drawing.Size(457, 147);
             this.insetPanel3.TabIndex = 113;
+            // 
+            // btn_n
+            // 
+            this.btn_n.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_n.Location = new System.Drawing.Point(177, 110);
+            this.btn_n.Name = "btn_n";
+            this.btn_n.Size = new System.Drawing.Size(28, 28);
+            this.btn_n.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_n.SubText = "";
+            this.btn_n.TabIndex = 120;
+            this.btn_n.Text = "N";
+            this.btn_n.UseVisualStyleBackColor = true;
+            this.btn_n.Click += new System.EventHandler(this.btn_n_Click);
+            // 
+            // btn_a
+            // 
+            this.btn_a.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_a.Location = new System.Drawing.Point(143, 110);
+            this.btn_a.Name = "btn_a";
+            this.btn_a.Size = new System.Drawing.Size(28, 28);
+            this.btn_a.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_a.SubText = "";
+            this.btn_a.TabIndex = 119;
+            this.btn_a.Text = "A";
+            this.btn_a.UseVisualStyleBackColor = true;
+            this.btn_a.Click += new System.EventHandler(this.btn_a_Click);
+            // 
+            // btn_r
+            // 
+            this.btn_r.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_r.Location = new System.Drawing.Point(109, 110);
+            this.btn_r.Name = "btn_r";
+            this.btn_r.Size = new System.Drawing.Size(28, 28);
+            this.btn_r.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_r.SubText = "";
+            this.btn_r.TabIndex = 118;
+            this.btn_r.Text = "R";
+            this.btn_r.UseVisualStyleBackColor = true;
+            this.btn_r.Click += new System.EventHandler(this.btn_r_Click);
+            // 
+            // btn_s
+            // 
+            this.btn_s.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_s.Location = new System.Drawing.Point(74, 110);
+            this.btn_s.Name = "btn_s";
+            this.btn_s.Size = new System.Drawing.Size(28, 28);
+            this.btn_s.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_s.SubText = "";
+            this.btn_s.TabIndex = 117;
+            this.btn_s.Text = "S";
+            this.btn_s.UseVisualStyleBackColor = true;
+            this.btn_s.Click += new System.EventHandler(this.btn_s_Click);
+            // 
+            // btn_u
+            // 
+            this.btn_u.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_u.Location = new System.Drawing.Point(40, 110);
+            this.btn_u.Name = "btn_u";
+            this.btn_u.Size = new System.Drawing.Size(28, 28);
+            this.btn_u.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_u.SubText = "";
+            this.btn_u.TabIndex = 116;
+            this.btn_u.Text = "U";
+            this.btn_u.UseVisualStyleBackColor = true;
+            this.btn_u.Click += new System.EventHandler(this.btn_u_Click);
             // 
             // btn_w
             // 
@@ -593,74 +667,32 @@ namespace vatACARS.Components
             this.lbl_pilotres.Text = "PILOT SENT MESSAGE";
             this.lbl_pilotres.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // btn_u
+            // lbl_intrc
             // 
-            this.btn_u.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_u.Location = new System.Drawing.Point(40, 110);
-            this.btn_u.Name = "btn_u";
-            this.btn_u.Size = new System.Drawing.Size(28, 28);
-            this.btn_u.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_u.SubText = "";
-            this.btn_u.TabIndex = 116;
-            this.btn_u.Text = "U";
-            this.btn_u.UseVisualStyleBackColor = true;
-            this.btn_u.Click += new System.EventHandler(this.btn_u_Click);
+            this.lbl_intrc.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.lbl_intrc.Font = new System.Drawing.Font("Terminus (TTF)", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_intrc.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_intrc.HasBorder = false;
+            this.lbl_intrc.InteractiveText = true;
+            this.lbl_intrc.Location = new System.Drawing.Point(3, 3);
+            this.lbl_intrc.Name = "lbl_intrc";
+            this.lbl_intrc.Size = new System.Drawing.Size(214, 404);
+            this.lbl_intrc.TabIndex = 113;
+            this.lbl_intrc.Text = resources.GetString("lbl_intrc.Text");
+            this.lbl_intrc.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // btn_s
+            // insetPanel4
             // 
-            this.btn_s.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_s.Location = new System.Drawing.Point(74, 110);
-            this.btn_s.Name = "btn_s";
-            this.btn_s.Size = new System.Drawing.Size(28, 28);
-            this.btn_s.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_s.SubText = "";
-            this.btn_s.TabIndex = 117;
-            this.btn_s.Text = "S";
-            this.btn_s.UseVisualStyleBackColor = true;
-            this.btn_s.Click += new System.EventHandler(this.btn_s_Click);
-            // 
-            // btn_r
-            // 
-            this.btn_r.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_r.Location = new System.Drawing.Point(109, 110);
-            this.btn_r.Name = "btn_r";
-            this.btn_r.Size = new System.Drawing.Size(28, 28);
-            this.btn_r.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_r.SubText = "";
-            this.btn_r.TabIndex = 118;
-            this.btn_r.Text = "R";
-            this.btn_r.UseVisualStyleBackColor = true;
-            this.btn_r.Click += new System.EventHandler(this.btn_r_Click);
-            // 
-            // btn_a
-            // 
-            this.btn_a.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_a.Location = new System.Drawing.Point(143, 110);
-            this.btn_a.Name = "btn_a";
-            this.btn_a.Size = new System.Drawing.Size(28, 28);
-            this.btn_a.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_a.SubText = "";
-            this.btn_a.TabIndex = 119;
-            this.btn_a.Text = "A";
-            this.btn_a.UseVisualStyleBackColor = true;
-            this.btn_a.Click += new System.EventHandler(this.btn_a_Click);
-            // 
-            // btn_n
-            // 
-            this.btn_n.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_n.Location = new System.Drawing.Point(177, 110);
-            this.btn_n.Name = "btn_n";
-            this.btn_n.Size = new System.Drawing.Size(28, 28);
-            this.btn_n.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_n.SubText = "";
-            this.btn_n.TabIndex = 120;
-            this.btn_n.Text = "N";
-            this.btn_n.UseVisualStyleBackColor = true;
-            this.btn_n.Click += new System.EventHandler(this.btn_n_Click);
+            this.insetPanel4.Controls.Add(this.lbl_intrc);
+            this.insetPanel4.Location = new System.Drawing.Point(475, 12);
+            this.insetPanel4.Name = "insetPanel4";
+            this.insetPanel4.Size = new System.Drawing.Size(220, 416);
+            this.insetPanel4.TabIndex = 121;
             // 
             // DebugWindow
             // 
-            this.ClientSize = new System.Drawing.Size(481, 458);
+            this.ClientSize = new System.Drawing.Size(707, 437);
+            this.Controls.Add(this.insetPanel4);
             this.Controls.Add(this.insetPanel3);
             this.Controls.Add(this.btn_netchecks);
             this.Controls.Add(this.lbl_netchecks);
@@ -679,6 +711,7 @@ namespace vatACARS.Components
             this.insetPanel1.PerformLayout();
             this.insetPanel3.ResumeLayout(false);
             this.insetPanel3.PerformLayout();
+            this.insetPanel4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -692,9 +725,7 @@ namespace vatACARS.Components
         private vatsys.TextField tbx_station;
         private vatsys.TextLabel lbl_callsign;
         private vatsys.TextLabel lbl_state;
-        private VATSYSControls.DropDownBox dd_state;
         private vatsys.GenericButton btn_add;
-        private VATSYSControls.DropDownBox dd_type;
         private vatsys.TextLabel lbl_type;
         private vatsys.InsetPanel insetPanel1;
         private vatsys.GenericButton btn_screate;
@@ -702,7 +733,6 @@ namespace vatACARS.Components
         private vatsys.TextLabel lbl_stationc;
         private vatsys.TextLabel lbl_stationcreate;
         private vatsys.TextLabel lbl_prov;
-        private VATSYSControls.DropDownBox dd_prov;
         private vatsys.GenericButton btn_netchecks;
         private vatsys.TextLabel lbl_netchecks;
         private vatsys.GenericButton btn_rdmstn;
@@ -726,5 +756,10 @@ namespace vatACARS.Components
         private vatsys.GenericButton btn_a;
         private vatsys.GenericButton btn_r;
         private vatsys.GenericButton btn_s;
+        private vatsys.TextField tbx_state;
+        private vatsys.TextField tbx_type;
+        private vatsys.TextField tbx_prov;
+        private vatsys.TextLabel lbl_intrc;
+        private vatsys.InsetPanel insetPanel4;
     }
 }
