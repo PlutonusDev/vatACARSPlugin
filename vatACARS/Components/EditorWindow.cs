@@ -60,6 +60,8 @@ namespace vatACARS.Components
                 label.Invalidate();
             }
 
+            btn_send.Text = $"Send to {selectedMsg.Station}";
+
             if (selectedMsg is TelexMessage)
             {
                 var msg = (TelexMessage)selectedMsg;
@@ -482,6 +484,11 @@ namespace vatACARS.Components
                 {
                     TelexMessage message = (TelexMessage)selectedMsg;
                     string resp = string.Join("\n", response.Where(obj => obj != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element)).Replace("@", "");
+                    if (resp.Length == 0)
+                    {
+                        ErrorHandler.GetInstance().AddError("No message to send");
+                        return;
+                    }
                     FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "telex", resp);
 
                     if (selectedMsg.Content == "(no message received)")
@@ -511,6 +518,11 @@ namespace vatACARS.Components
                     if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "NE")) responseCode = "NE";
                     CPDLCMessage message = message1;
                     string encodedMessage = string.Join("\n", response.Where(obj => obj != null && obj.Entry != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element));
+                    if (encodedMessage.Length == 0) 
+                    {
+                        ErrorHandler.GetInstance().AddError("No message to send");
+                        return;
+                    }
                     string resp = $"/data2/{SentMessages}/{message.MessageId}/{responseCode}/{encodedMessage}";
                     if (resp.EndsWith("@")) resp = resp.Substring(0, resp.Length - 1);
                     FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", resp);

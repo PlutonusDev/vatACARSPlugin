@@ -38,15 +38,15 @@ namespace vatACARS.Components
             {
                 LoadAddRoute();
             }
-            if (identifier == "LEVEL")
+            else if (identifier == "LEVEL")
             {
                 LoadLevel();
             }
-            if (identifier == "FREQUENCY")
+            else if (identifier == "FREQUENCY")
             {
                 LoadFreqs();
             }
-            if (identifier == "UNIT NAME")
+            else if (identifier == "UNIT NAME")
             {
                 LoadFreqs();
             }
@@ -86,6 +86,7 @@ namespace vatACARS.Components
                     item.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
                     lvw_quickfillselector.Items.Add(item);
                     quickFillItems.Add(item);
+                    tbx_freetext.AutoCompleteCustomSource.Add(label);
                 }
             }
             catch (Exception ex)
