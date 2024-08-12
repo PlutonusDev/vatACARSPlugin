@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Net.Http;
 using System.Windows.Forms;
 using vatACARS.Helpers;
 using vatACARS.Util;
 using vatsys;
-using vatACARS.Lib;
 using static vatACARS.Helpers.Transceiver;
-using static vatsys.Colours;
-using System.Linq;
-using static vatsys.CPDLC;
-using System.Net.Http;
 
 namespace vatACARS.Components
 {
@@ -49,6 +44,7 @@ namespace vatACARS.Components
         private string callsign;
         private ErrorHandler errorHandler = ErrorHandler.GetInstance();
         private int provider;
+
         public DebugWindow()
         {
             Timer timer = new Timer();
@@ -66,7 +62,7 @@ namespace vatACARS.Components
                 }
             });
 
-            timer.Start(); 
+            timer.Start();
             InitializeComponent();
             StyleComponent();
         }
@@ -89,6 +85,12 @@ namespace vatACARS.Components
                 }
                 Properties.Settings.Default.Save();
             }
+        }
+
+        private void btn_a_Click(object sender, EventArgs e)
+        {
+            tbx_response.Text = "N";
+            tbx_content2.Text = "AFFIRM";
         }
 
         private void btn_add_Click(object sender, EventArgs e)
@@ -126,6 +128,12 @@ namespace vatACARS.Components
             }
         }
 
+        private void btn_n_Click(object sender, EventArgs e)
+        {
+            tbx_response.Text = "N";
+            tbx_content2.Text = "NEGATIVE";
+        }
+
         private void btn_netchecks_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             Properties.Settings.Default.netChecks = !Properties.Settings.Default.netChecks;
@@ -135,6 +143,11 @@ namespace vatACARS.Components
             Properties.Settings.Default.Save();
         }
 
+        private void btn_r_Click(object sender, EventArgs e)
+        {
+            tbx_response.Text = "N";
+            tbx_content2.Text = "ROGER";
+        }
 
         private void btn_rdmstn_Click(object sender, EventArgs e)
         {
@@ -153,6 +166,12 @@ namespace vatACARS.Components
             }
         }
 
+        private void btn_s_Click(object sender, EventArgs e)
+        {
+            tbx_response.Text = "N";
+            tbx_content2.Text = "STANDBY";
+        }
+
         private void btn_screate_Click(object sender, EventArgs e)
         {
             try
@@ -167,6 +186,28 @@ namespace vatACARS.Components
             {
                 errorHandler.AddError(ex.ToString());
             }
+        }
+
+        private void btn_send_Click(object sender, EventArgs e)
+        {
+            FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(tbx_callsign.Text, "CPDLC", $"/data2/{tbx_msgid.Text}/{tbx_replyid.Text}/{tbx_response.Text}/{tbx_content2.Text}", true);
+            _ = HoppiesInterface.SendMessage(req);
+        }
+
+        private void btn_u_Click(object sender, EventArgs e)
+        {
+            tbx_response.Text = "N";
+            tbx_content2.Text = "UNABLE";
+        }
+
+        private void btn_w_Click(object sender, EventArgs e)
+        {
+            tbx_response.Text = "N";
+            tbx_content2.Text = "WILCO";
+        }
+
+        private void DebugWindow_Load(object sender, EventArgs e)
+        {
         }
 
         private void DebugWindow_Shown(object sender, EventArgs e)
@@ -270,51 +311,10 @@ namespace vatACARS.Components
             btn_send.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
         }
 
-        private void DebugWindow_Load(object sender, EventArgs e)
+        private void tbx_callsign_TextChanged(object sender, EventArgs e)
         {
-
-        }
-
-        private void btn_send_Click(object sender, EventArgs e)
-        {
-            FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(tbx_callsign.Text, "CPDLC", $"/data2/{tbx_msgid.Text}/{tbx_replyid.Text}/{tbx_response.Text}/{tbx_content2.Text}", true);
-            _ = HoppiesInterface.SendMessage(req);
-        }
-
-        private void btn_w_Click(object sender, EventArgs e)
-        {
-            tbx_response.Text = "N";
-            tbx_content2.Text = "WILCO";
-        }
-
-        private void btn_u_Click(object sender, EventArgs e)
-        {
-            tbx_response.Text = "N";
-            tbx_content2.Text = "UNABLE";
-        }
-
-        private void btn_s_Click(object sender, EventArgs e)
-        {
-            tbx_response.Text = "N";
-            tbx_content2.Text = "STANDBY";
-        }
-
-        private void btn_r_Click(object sender, EventArgs e)
-        {
-            tbx_response.Text = "N";
-            tbx_content2.Text = "ROGER";
-        }
-
-        private void btn_a_Click(object sender, EventArgs e)
-        {
-            tbx_response.Text = "N";
-            tbx_content2.Text = "AFFIRM";
-        }
-
-        private void btn_n_Click(object sender, EventArgs e)
-        {
-            tbx_response.Text = "N";
-            tbx_content2.Text = "NEGATIVE";
+            tbx_callsign.Text = tbx_callsign.Text.ToUpper();
+            tbx_callsign.SelectionStart = tbx_callsign.Text.Length;
         }
 
         private void tbx_station_TextChanged(object sender, EventArgs e)
@@ -327,12 +327,6 @@ namespace vatACARS.Components
         {
             tbx_stationc.Text = tbx_stationc.Text.ToUpper();
             tbx_stationc.SelectionStart = tbx_stationc.Text.Length;
-        }
-
-        private void tbx_callsign_TextChanged(object sender, EventArgs e)
-        {
-            tbx_callsign.Text = tbx_callsign.Text.ToUpper();
-            tbx_callsign.SelectionStart = tbx_callsign.Text.Length;
         }
     }
 }

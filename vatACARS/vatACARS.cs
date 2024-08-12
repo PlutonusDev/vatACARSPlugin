@@ -20,7 +20,7 @@ namespace vatACARS
 {
     public static class AppData
     {
-        public static Version CurrentVersion { get; } = new Version(1, 0, 6);
+        public static Version CurrentVersion { get; } = new Version(1, 1, 0);
     }
 
     [Export(typeof(IPlugin))]
@@ -208,17 +208,17 @@ namespace vatACARS
 
         private static void DoShowDebugWindow()
         {
-                if (debugWindow == null || debugWindow.IsDisposed)
-                {
-                    debugWindow = new DebugWindow();
-                }
-                else if (debugWindow.Visible)
-                {
-                    return;
-                }
-
-                debugWindow.Show(Form.ActiveForm);
+            if (debugWindow == null || debugWindow.IsDisposed)
+            {
+                debugWindow = new DebugWindow();
             }
+            else if (debugWindow.Visible)
+            {
+                return;
+            }
+
+            debugWindow.Show(Form.ActiveForm);
+        }
 
         private static void DoShowDispatchWindow()
         {
@@ -236,17 +236,38 @@ namespace vatACARS
 
         private static void DoShowHistoryWindow()
         {
+            if (historyWindow == null || historyWindow.IsDisposed)
+            {
+                historyWindow = new HistoryWindow();
+            }
+            else if (historyWindow.Visible)
+            {
+                return;
+            }
 
-                if (historyWindow == null || historyWindow.IsDisposed)
-                {
-                    historyWindow = new HistoryWindow();
-                }
-                else if (historyWindow.Visible)
-                {
-                    return;
-                }
+            historyWindow.Show(Form.ActiveForm);
+        }
 
-                historyWindow.Show(Form.ActiveForm);
+        private static void DoShowPopupWindow(string c, FDR fdr)
+        {
+            string formattedCFLString = (fdr.CFLString != null && int.Parse(fdr.CFLString) < 110
+                ? "A"
+                : "FL") + fdr.CFLString.PadLeft(3, '0');
+            c = $"Do you want to send a CPDLC message to {fdr.Callsign} to clear their flight level to {formattedCFLString}?";
+
+            PopupWindow newPopupWindow = new PopupWindow(c.Trim(), false, fdr);
+            Form form = Form.ActiveForm;
+            if (form != null)
+            {
+                if (form.InvokeRequired)
+                {
+                    form.Invoke((Action)(() => newPopupWindow.Show(form)));
+                }
+                else
+                {
+                    newPopupWindow.Show(form);
+                }
+            }
         }
 
         private void ActiveForm_KeyUp(object sender, KeyEventArgs e)
@@ -380,28 +401,6 @@ namespace vatACARS
             catch (Exception e)
             {
                 logger.Log($"Error in Start: {e.Message}");
-            }
-        }
-
-        private static void DoShowPopupWindow(string c, FDR fdr)
-        {
-            string formattedCFLString = (fdr.CFLString != null && int.Parse(fdr.CFLString) < 110
-                ? "A"
-                : "FL") + fdr.CFLString.PadLeft(3, '0');
-            c = $"Do you want to send a CPDLC message to {fdr.Callsign} to clear their flight level to {formattedCFLString}?";
-
-            PopupWindow newPopupWindow = new PopupWindow(c.Trim(), false, fdr);
-            Form form = Form.ActiveForm;
-            if (form != null)
-            {
-                if (form.InvokeRequired)
-                {
-                    form.Invoke((Action)(() => newPopupWindow.Show(form)));
-                }
-                else
-                {
-                    newPopupWindow.Show(form);
-                }
             }
         }
 
