@@ -73,6 +73,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\HistoryWindow.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\HistoryWindow.Designer.cs">
+      <DependentUpon>HistoryWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\DispatchWindow.cs">
       <SubType>designer</SubType>
     </Compile>
@@ -108,6 +114,12 @@
     </Compile>
     <Compile Include="Components\LogonConsentWindow.Designer.cs">
       <DependentUpon>LogonConsentWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Popup.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\Popup.Designer.cs">
+      <DependentUpon>Popup.cs</DependentUpon>
     </Compile>
     <Compile Include="Components\PDCWindow.cs">
       <SubType>designer</SubType>
@@ -168,6 +180,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Components\DebugWindow.resx">
+      <DependentUpon>DebugWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Components\DispatchWindow.resx">
       <DependentUpon>DispatchWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -178,23 +193,21 @@
     <EmbeddedResource Include="Components\ErrorWindow.resx">
       <DependentUpon>ErrorWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Components\DebugWindow.resx">
-      <DependentUpon>DebugWindow.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Components\HandoffSelector.resx">
       <DependentUpon>HandoffSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Components\LogonConsentWindow.resx">
       <DependentUpon>LogonConsentWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Components\PDCWindow.resx">
-      <DependentUpon>PDCWindow.cs</DependentUpon>
+    <EmbeddedResource Include="Components\Popup.resx">
+      <DependentUpon>Popup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Components\QuickFillWindow.resx">
       <DependentUpon>QuickFillWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Components\SetupWindow.resx">
       <DependentUpon>SetupWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

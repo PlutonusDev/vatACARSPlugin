@@ -1,4 +1,6 @@
-﻿namespace vatACARS.Components
+﻿using System.Collections.ObjectModel;
+
+namespace vatACARS.Components
 {
     partial class PDCWindow
     {
@@ -195,7 +197,7 @@
             this.dd_freq.BackColor = System.Drawing.SystemColors.ControlDark;
             this.dd_freq.FocusColor = System.Drawing.Color.Cyan;
             this.dd_freq.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.dd_freq.Items = ((System.Collections.ObjectModel.ObservableCollection<string>)(resources.GetObject("dd_freq.Items")));
+            this.dd_freq.Items = new ObservableCollection<string>();
             this.dd_freq.Location = new System.Drawing.Point(109, 151);
             this.dd_freq.Name = "dd_freq";
             this.dd_freq.SelectedIndex = -1;
@@ -223,12 +225,13 @@
             this.dd_freq2.BackColor = System.Drawing.SystemColors.ControlDark;
             this.dd_freq2.FocusColor = System.Drawing.Color.Cyan;
             this.dd_freq2.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.dd_freq2.Items = ((System.Collections.ObjectModel.ObservableCollection<string>)(resources.GetObject("dd_freq2.Items")));
+            this.dd_freq2.Items = new ObservableCollection<string>();
             this.dd_freq2.Location = new System.Drawing.Point(109, 221);
             this.dd_freq2.Name = "dd_freq2";
             this.dd_freq2.SelectedIndex = -1;
             this.dd_freq2.Size = new System.Drawing.Size(162, 25);
             this.dd_freq2.TabIndex = 104;
+            this.dd_freq2.SelectedIndexChanged += new System.EventHandler(this.dd_freq2_SelectedIndexChanged);
             // 
             // PDCWindow
             // 

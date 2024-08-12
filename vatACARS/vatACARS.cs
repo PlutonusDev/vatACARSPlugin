@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
 using vatACARS.Components;
 using vatACARS.Helpers;
@@ -18,23 +20,33 @@ namespace vatACARS
 {
     public static class AppData
     {
-        public static Version CurrentVersion { get; } = new Version(1, 0, 6);
+        public static Version CurrentVersion { get; } = new Version(1, 1, 0);
     }
 
     [Export(typeof(IPlugin))]
     public class vatACARS : IPlugin
     {
+        public static DebugWindow debugWindow;
+        public static HistoryWindow historyWindow;
         public static SetupWindow setupWindow;
+        public List<string> DebugNames = new List<string>();
         private static DispatchWindow dispatchWindow = new DispatchWindow();
         private static HandoffSelector HandoffSelector;
         private readonly Logger logger = new Logger("vatACARS");
+        private CustomToolStripMenuItem debugWindowMenu;
         private CustomToolStripMenuItem dispatchWindowMenu;
+        private CustomToolStripMenuItem historyWindowMenu;
+        private Dictionary<FDR, string> lastCFLStrings = new Dictionary<FDR, string>();
         private CustomToolStripMenuItem setupWindowMenu;
+        private System.Timers.Timer UpdateTimer;
 
         // The following function runs on vatSys startup. Init code should be contained here.
         public vatACARS()
         {
             string dataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "vatACARS");
+            UpdateTimer = new System.Timers.Timer(10000.0);
+            UpdateTimer.Elapsed += new ElapsedEventHandler(UpdateTimer_Elapsed);
+            UpdateTimer.Start();
 
             // Create directories only if they don't exist
             Directory.CreateDirectory(dataPath);
@@ -106,9 +118,8 @@ namespace vatACARS
                             OnMouseClick = HandoffLabelClick
                         };
 
-                        /*if (radarTrack == null) return null;
-                        int level = radarTrack == null ? flightDataRecord.PRL / 100 : radarTrack.CorrectedAltitude / 100;
-                        if (level < 245)
+                        int level = flightDataRecord.CoupledTrack.ActualAircraft.TrueAltitude;
+                        if (level < 24500)
                         {
                             return new CustomLabelItem()
                             {
@@ -116,7 +127,7 @@ namespace vatACARS
                                 ForeColourIdentity = Colours.Identities.Warning,
                                 OnMouseClick = HandoffLabelClick
                             };
-                        }*/
+                        }
 
                         if (combinedDownlink != null) return new CustomLabelItem()
                         {
@@ -195,6 +206,20 @@ namespace vatACARS
             }
         }
 
+        private static void DoShowDebugWindow()
+        {
+            if (debugWindow == null || debugWindow.IsDisposed)
+            {
+                debugWindow = new DebugWindow();
+            }
+            else if (debugWindow.Visible)
+            {
+                return;
+            }
+
+            debugWindow.Show(Form.ActiveForm);
+        }
+
         private static void DoShowDispatchWindow()
         {
             if (dispatchWindow == null || dispatchWindow.IsDisposed)
@@ -207,6 +232,42 @@ namespace vatACARS
             }
 
             dispatchWindow.Show(Form.ActiveForm);
+        }
+
+        private static void DoShowHistoryWindow()
+        {
+            if (historyWindow == null || historyWindow.IsDisposed)
+            {
+                historyWindow = new HistoryWindow();
+            }
+            else if (historyWindow.Visible)
+            {
+                return;
+            }
+
+            historyWindow.Show(Form.ActiveForm);
+        }
+
+        private static void DoShowPopupWindow(string c, FDR fdr)
+        {
+            string formattedCFLString = (fdr.CFLString != null && int.Parse(fdr.CFLString) < 110
+                ? "A"
+                : "FL") + fdr.CFLString.PadLeft(3, '0');
+            c = $"Do you want to send a CPDLC message to {fdr.Callsign} to clear their flight level to {formattedCFLString}?";
+
+            PopupWindow newPopupWindow = new PopupWindow(c.Trim(), false, fdr);
+            Form form = Form.ActiveForm;
+            if (form != null)
+            {
+                if (form.InvokeRequired)
+                {
+                    form.Invoke((Action)(() => newPopupWindow.Show(form)));
+                }
+                else
+                {
+                    newPopupWindow.Show(form);
+                }
+            }
         }
 
         private void ActiveForm_KeyUp(object sender, KeyEventArgs e)
@@ -225,7 +286,7 @@ namespace vatACARS
 
             CPDLCMessage msg1 = getAllCPDLCMessages().FirstOrDefault(message => message.State == 0 && message.Station == fdr.Callsign);
 
-            if(msg1 != null) DispatchWindow.SelectedMessage = msg1;
+            if (msg1 != null) DispatchWindow.SelectedMessage = msg1;
             else DispatchWindow.SelectedMessage = new CPDLCMessage()
             {
                 State = 0,
@@ -240,6 +301,11 @@ namespace vatACARS
             e.Handled = true;
         }
 
+        private void DebugWindowMenu_Click(object sender, EventArgs e)
+        {
+            MMI.InvokeOnGUI(() => DoShowDebugWindow());
+        }
+
         private void DispatchWindowMenu_Click(object sender, EventArgs e)
         {
             MMI.InvokeOnGUI(() => DoShowDispatchWindow());
@@ -252,6 +318,11 @@ namespace vatACARS
             HandoffSelector.Show(Form.ActiveForm);
 
             e.Handled = true;
+        }
+
+        private void HistoryWindowMenu_Click(object sender, EventArgs e)
+        {
+            MMI.InvokeOnGUI(() => DoShowHistoryWindow());
         }
 
         private void PDCLabelClick(CustomLabelItemMouseClickEventArgs e)
@@ -294,6 +365,25 @@ namespace vatACARS
                 dispatchWindowMenu.Item.Click += DispatchWindowMenu_Click;
                 MMI.AddCustomMenuItem(dispatchWindowMenu);
 
+                historyWindowMenu = new CustomToolStripMenuItem(CustomToolStripMenuItemWindowType.Main, CustomToolStripMenuItemCategory.Custom, new ToolStripMenuItem("History"));
+                historyWindowMenu.CustomCategoryName = "ACARS";
+                historyWindowMenu.Item.Click += HistoryWindowMenu_Click;
+                MMI.AddCustomMenuItem(historyWindowMenu);
+
+                DebugNames.Add("Joshua H");
+                DebugNames.Add("Edward M");
+                DebugNames.Add("Jamie K");
+                if (!DebugNames.Contains(Network.Me.RealName))
+                {
+                    logger.Log($"{Network.Me.RealName} is not Authorized to Debug.");
+                }
+                else
+                {
+                    logger.Log($"{Network.Me.RealName} is Authorized to Debug.");
+                    debugWindowMenu = new CustomToolStripMenuItem(CustomToolStripMenuItemWindowType.Main, CustomToolStripMenuItemCategory.Settings, new ToolStripMenuItem("ACARS DEBUG"));
+                    debugWindowMenu.Item.Click += DebugWindowMenu_Click;
+                    MMI.AddCustomMenuItem(debugWindowMenu);
+                }
                 // Update Checking
                 logger.Log("Starting version checker...");
                 VersionChecker.StartListening();
@@ -311,6 +401,35 @@ namespace vatACARS
             catch (Exception e)
             {
                 logger.Log($"Error in Start: {e.Message}");
+            }
+        }
+
+        private void UpdateTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            List<FDR> fdrs = GetFDRs.ToList();
+            foreach (FDR fdr in fdrs)
+            {
+                if (!lastCFLStrings.TryGetValue(fdr, out string lastCFLString))
+                {
+                    lastCFLString = string.Empty;
+                }
+
+                if (fdr.CFLString != lastCFLString)
+                {
+                    lastCFLStrings[fdr] = fdr.CFLString;
+                    Station station = getAllStations().FirstOrDefault(Station => Station.Callsign == fdr.Callsign);
+                    if (station != null)
+                    {
+                        logger.Log("Station Connected Changed CFL?");
+                        var recentLevelMessages = GetRecentSentCPDLCMessages()
+                            .Where(m => m.Intent.Type == "LEVEL" && m.Station == station.Callsign);
+                        if (!recentLevelMessages.Any())
+                        {
+                            logger.Log($"Station: {station.Callsign} Updated there CFL with no expectation.");
+                            DoShowPopupWindow("CFL", fdr);
+                        }
+                    }
+                }
             }
         }
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http;
-using System.Net.NetworkInformation;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using vatACARS.Util;
 using vatsys;
@@ -43,7 +43,7 @@ namespace vatACARS.Components
             addSentCPDLCMessage(new SentCPDLCMessage()
             {
                 Station = selectedMsg.Station,
-                MessageId = SentMessages,
+                MessageId = (SentMessages - 1),
                 ReplyMessageId = SentMessages
             });
 
@@ -56,7 +56,7 @@ namespace vatACARS.Components
                 MessageId = SentMessages,
                 ReplyMessageId = -1
             });
-
+            networkPilotFDR.PDCSent = true;
             selectedMsg.setMessageState(MessageState.Finished);
             Close();
         }
@@ -76,31 +76,80 @@ namespace vatACARS.Components
             result = result.Trim();
             if (result.Length <= maxLength) result += " T";
 
+            result = result.Replace("\\", " ");
+
             return result;
         }
 
         private void dd_freq_SelectedIndexChanged(object sender, EventArgs e)
         {
+            dd_freq.Text = Regex.Replace(dd_freq.Text, @"[^\d\.]", string.Empty);
+        }
+
+        private void dd_freq2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            dd_freq2.Text = Regex.Replace(dd_freq2.Text, @"[^\d\.]", string.Empty);
         }
 
         private void InitPlaceholders()
         {
-            networkPilotFDR = GetFDRs.FirstOrDefault((FDR f) => f.Callsign == selectedMsg.Station);
+            networkPilotFDR = GetFDRs.FirstOrDefault(f => f.Callsign == selectedMsg.Station);
             if (networkPilotFDR == null || !GetFDRs.Contains(networkPilotFDR))
             {
+                errorHandler.AddError("Network pilot FDR not found or not in GetFDRs collection.");
                 Close();
                 return;
             }
 
-            var propertiesToCheck = new[] { "Callsign", "AircraftType", "DesAirport", "SID", "DepartureRunway", "Route", "CFLString", "AssignedSSRCode" };
-            foreach (var property in propertiesToCheck)
+            if (networkPilotFDR.PDCCapable == false)
             {
-                var propInfo = networkPilotFDR.GetType().GetProperty(property);
-                if (propInfo == null || propInfo.GetValue(networkPilotFDR) == null)
+                errorHandler.AddError($"PDC for '{selectedMsg.Station}' failed to initialise. The pilot is not PDC capable.");
+                FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "telex", $"UNABLE");
+                _ = HoppiesInterface.SendMessage(req);
+                selectedMsg.setMessageState(MessageState.Finished);
+                Close();
+                return;
+            }
+
+            var requiredProperties = new Dictionary<string, Func<object, bool>>
+            {
+                { "Callsign", value => !string.IsNullOrEmpty(value.ToString()) },
+                { "AircraftType", value => !string.IsNullOrEmpty(value.ToString()) },
+                { "DesAirport", value => !string.IsNullOrEmpty(value.ToString()) },
+                { "DepAirport", value => !string.IsNullOrEmpty(value.ToString()) },
+                { "Route", value => !string.IsNullOrEmpty(value.ToString()) },
+                { "CFLString", value => !string.IsNullOrEmpty(value.ToString()) },
+                { "SID", value => value != null && !string.IsNullOrEmpty(((dynamic)value).Name) },
+                { "DepartureRunway", value => value != null && !string.IsNullOrEmpty(((dynamic)value).Name) },
+                { "AssignedSSRCode", value => (int)value != -1 },
+                { "ETD", value => (DateTime)value != DateTime.MinValue },
+            };
+
+            var invalidProperties = new List<string>();
+
+            foreach (var property in requiredProperties)
+            {
+                var propInfo = networkPilotFDR.GetType().GetProperty(property.Key);
+                if (propInfo == null)
                 {
-                    Close();
-                    return;
+                    invalidProperties.Add(property.Key);
                 }
+                else
+                {
+                    var value = propInfo.GetValue(networkPilotFDR);
+                    if (value == null || !property.Value(value))
+                    {
+                        invalidProperties.Add(property.Key);
+                    }
+                }
+            }
+
+            if (invalidProperties.Count > 0)
+            {
+                var errorMessage = $"PDC for '{selectedMsg.Station}' failed to initialise. The following properties are invalid or not set: {string.Join(", ", invalidProperties)}";
+                errorHandler.AddError(errorMessage);
+                Close();
+                return;
             }
 
             Text = $"PDC {networkPilotFDR.Callsign}";
@@ -133,6 +182,8 @@ namespace vatACARS.Components
 
         private void LoadDepFreq()
         {
+            dd_freq.Items.Add("UNICOM 122.800");
+            dd_freq2.Items.Add("UNICOM 122.800");
             List<string> freqs = new List<string>();
 
             foreach (VSCSFrequency vscsFrequency in (IEnumerable<VSCSFrequency>)Audio.VSCSFrequencies)

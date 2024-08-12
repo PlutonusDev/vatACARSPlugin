@@ -41,16 +41,29 @@ namespace vatACARS.Components
             StationAdded += UpdateStationsList;
             StationRemoved += UpdateStationsList;
 
-            lvw_messages.MouseWheel += (sender, e) =>
-            {
-                if (scr_messages.Enabled)
-                {
-                    if (e.Delta > 0) scr_messages.Value -= scr_messages.Change;
-                    else scr_messages.Value += scr_messages.Change;
-                }
-            };
-
             UpdateMessages();
+        }
+
+        public static void ShowEditorWindow(IMessageData msg)
+        {
+            foreach (Form form in Application.OpenForms)
+            {
+                if (form is EditorWindow && ((EditorWindow)form).selectedMsg == msg)
+                {
+                    if (form.Visible)
+                    {
+                        form.BringToFront();
+                        return;
+                    }
+                    else
+                    {
+                        form.Close();
+                    }
+                }
+            }
+            EditorWindow window = new EditorWindow();
+            window.selectedMsg = msg;
+            window.Show(ActiveForm);
         }
 
         public void AddMessage(TelexMessage message)
@@ -123,8 +136,7 @@ namespace vatACARS.Components
                     {
                         item.ContextMenu.Show(false);
                         SelectedMessage = message;
-                        EditorWindow window = new EditorWindow();
-                        window.Show(ActiveForm);
+                        ShowEditorWindow(SelectedMessage);
                     };
                 }
             }
@@ -189,7 +201,6 @@ namespace vatACARS.Components
                         item.ContextMenu.Show(false);
                         FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(message.Station, "CPDLC", $"/data2/{SentMessages}/{message.MessageId}/N/STANDBY");
                         _ = HoppiesInterface.SendMessage(req);
-                        message.Content = "STANDBY";
                         message.setMessageState(MessageState.StbyDefer);
                         UpdateMessages();
                     };
@@ -204,8 +215,7 @@ namespace vatACARS.Components
                     {
                         item.ContextMenu.Show(false);
                         SelectedMessage = message;
-                        EditorWindow window = new EditorWindow();
-                        window.Show(ActiveForm);
+                        ShowEditorWindow(SelectedMessage);
                     };
                 }
             }
@@ -377,7 +387,7 @@ namespace vatACARS.Components
                                     }
                                     else
                                     {
-                                        ShowEditorWindow(msg);
+                                        logger.Log("error showing PDC window.");
                                     }
                                     return;
                                 }
@@ -400,6 +410,20 @@ namespace vatACARS.Components
             }
         }
 
+        private void MessageScroll_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                this.scr_messages.Value -= scr_messages.Change;
+            }
+            else
+            {
+                if (e.Delta >= 0)
+                    return;
+                this.scr_messages.Value += scr_messages.Change;
+            }
+        }
+
         private void PollTimer(object sender, ElapsedEventArgs e)
         {
             UpdateMessages();
@@ -408,28 +432,6 @@ namespace vatACARS.Components
         private void scr_messages_Scroll(object sender, EventArgs e)
         {
             lvw_messages.SetScrollPosVert(scr_messages.PercentageValue);
-        }
-
-        private void ShowEditorWindow(IMessageData msg)
-        {
-            foreach (Form form in Application.OpenForms)
-            {
-                if (form is EditorWindow && ((EditorWindow)form).selectedMsg == msg)
-                {
-                    if (form.Visible)
-                    {
-                        form.BringToFront();
-                        return;
-                    }
-                    else
-                    {
-                        form.Close();
-                    }
-                }
-            }
-            EditorWindow window = new EditorWindow();
-            window.selectedMsg = msg;
-            window.Show(ActiveForm);
         }
 
         private void StyleComponent()

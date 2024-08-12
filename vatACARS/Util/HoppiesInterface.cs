@@ -25,12 +25,20 @@ namespace vatACARS.Util
         private static Random random = new Random();
         private static Timer timer;
 
-        public static FormUrlEncodedContent ConstructMessage(string Recipient, string MessageType, string PacketData)
+        public static FormUrlEncodedContent ConstructMessage(string Recipient, string MessageType, string PacketData, bool IsPilotMessage = false)
         {
             CPDLCMessageRequest msg = new CPDLCMessageRequest();
             msg.LogonCode = ClientInformation.LogonCode;
-            msg.Callsign = ClientInformation.Callsign;
-            msg.Recipient = Recipient;
+            if (IsPilotMessage) //faking response from pilot to controller.
+            {
+                msg.Callsign = Recipient;
+                msg.Recipient = ClientInformation.Callsign;
+            }
+            else
+            {
+                msg.Callsign = ClientInformation.Callsign;
+                msg.Recipient = Recipient;
+            }
             msg.MessageType = MessageType;
             msg.PacketData = PacketData;
 
