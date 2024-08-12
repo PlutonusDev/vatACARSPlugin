@@ -303,8 +303,8 @@ namespace vatACARS.Helpers
         {
             if (message is CPDLCMessage) CPDLCMessages.Remove((CPDLCMessage)message);
             if (message is TelexMessage) TelexMessages.Remove((TelexMessage)message);
+            MessageUpdated.Invoke(null, message);
         }
-
         public static class ClientInformation
         {
             public static string Callsign = "";
