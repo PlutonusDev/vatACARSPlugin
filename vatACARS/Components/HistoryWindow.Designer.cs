@@ -96,7 +96,6 @@ namespace vatACARS.Components
             this.scr_messages.Location = new System.Drawing.Point(508, 52);
             this.scr_messages.Name = "scr_messages";
             this.scr_messages.Orientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
-            this.scr_messages.PercentageValue = 0F;
             this.scr_messages.PreferredHeight = 10;
             this.scr_messages.Size = new System.Drawing.Size(20, 250);
             this.scr_messages.TabIndex = 5;
