@@ -412,7 +412,7 @@ namespace vatACARS.Components
             lvw_messages.SetScrollPosVert(scr_messages.PercentageValue);
         }
 
-        private void ShowEditorWindow(IMessageData msg)
+        public static void ShowEditorWindow(IMessageData msg)
         {
             foreach (Form form in Application.OpenForms)
             {

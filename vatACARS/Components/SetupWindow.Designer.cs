@@ -47,6 +47,9 @@
             this.lbl_statusMessage = new vatsys.TextLabel();
             this.btn_sendreports = new vatsys.GenericButton();
             this.lbl_sendcrash = new vatsys.TextLabel();
+            this.btn_backup = new vatsys.GenericButton();
+            this.lbl_backup = new vatsys.TextLabel();
+            this.btn_restore = new vatsys.GenericButton();
             ((System.ComponentModel.ISupportInitialize)(this.sld_auralAlertVolume)).BeginInit();
             this.SuspendLayout();
             // 
@@ -54,7 +57,7 @@
             // 
             this.btn_connect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_connect.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_connect.Location = new System.Drawing.Point(314, 342);
+            this.btn_connect.Location = new System.Drawing.Point(314, 376);
             this.btn_connect.Name = "btn_connect";
             this.btn_connect.Size = new System.Drawing.Size(101, 28);
             this.btn_connect.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -273,7 +276,7 @@
             this.lbl_statusMessage.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_statusMessage.HasBorder = false;
             this.lbl_statusMessage.InteractiveText = true;
-            this.lbl_statusMessage.Location = new System.Drawing.Point(12, 313);
+            this.lbl_statusMessage.Location = new System.Drawing.Point(12, 347);
             this.lbl_statusMessage.Name = "lbl_statusMessage";
             this.lbl_statusMessage.Size = new System.Drawing.Size(287, 57);
             this.lbl_statusMessage.TabIndex = 31;
@@ -305,11 +308,54 @@
             this.lbl_sendcrash.Text = "SEND CRASH REPORTS";
             this.lbl_sendcrash.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // btn_backup
+            // 
+            this.btn_backup.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_backup.Location = new System.Drawing.Point(177, 310);
+            this.btn_backup.Name = "btn_backup";
+            this.btn_backup.Size = new System.Drawing.Size(85, 26);
+            this.btn_backup.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_backup.SubText = "";
+            this.btn_backup.TabIndex = 34;
+            this.btn_backup.Text = "Backup";
+            this.btn_backup.UseVisualStyleBackColor = true;
+            this.btn_backup.Click += new System.EventHandler(this.btn_backup_Click);
+            // 
+            // lbl_backup
+            // 
+            this.lbl_backup.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.lbl_backup.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_backup.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_backup.HasBorder = false;
+            this.lbl_backup.InteractiveText = true;
+            this.lbl_backup.Location = new System.Drawing.Point(12, 310);
+            this.lbl_backup.Name = "lbl_backup";
+            this.lbl_backup.Size = new System.Drawing.Size(159, 26);
+            this.lbl_backup.TabIndex = 35;
+            this.lbl_backup.Text = "BACKUP SETTINGS";
+            this.lbl_backup.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // btn_restore
+            // 
+            this.btn_restore.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_restore.Location = new System.Drawing.Point(268, 310);
+            this.btn_restore.Name = "btn_restore";
+            this.btn_restore.Size = new System.Drawing.Size(85, 26);
+            this.btn_restore.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_restore.SubText = "";
+            this.btn_restore.TabIndex = 36;
+            this.btn_restore.Text = "Restore";
+            this.btn_restore.UseVisualStyleBackColor = true;
+            this.btn_restore.Click += new System.EventHandler(this.btn_restore_Click);
+            // 
             // SetupWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(427, 382);
+            this.ClientSize = new System.Drawing.Size(427, 416);
+            this.Controls.Add(this.btn_restore);
+            this.Controls.Add(this.lbl_backup);
+            this.Controls.Add(this.btn_backup);
             this.Controls.Add(this.btn_sendreports);
             this.Controls.Add(this.lbl_sendcrash);
             this.Controls.Add(this.lbl_statusMessage);
@@ -368,5 +414,8 @@
         private vatsys.TextLabel lbl_statusMessage;
         private vatsys.GenericButton btn_sendreports;
         private vatsys.TextLabel lbl_sendcrash;
+        private vatsys.GenericButton btn_backup;
+        private vatsys.TextLabel lbl_backup;
+        private vatsys.GenericButton btn_restore;
     }
 }

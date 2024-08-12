@@ -60,6 +60,8 @@ namespace vatACARS.Components
                 label.Invalidate();
             }
 
+            btn_send.Text = $"Send to {selectedMsg.Station}";
+
             if (selectedMsg is TelexMessage)
             {
                 var msg = (TelexMessage)selectedMsg;
@@ -121,6 +123,11 @@ namespace vatACARS.Components
                     lvMsgPart.SubItems.Add($"{msgPart}");
                     lvMsgPart.Font = MMI.eurofont_winsml;
                     lvw_messages.Items.Add(lvMsgPart);
+                }
+
+                if (msg.Content.Contains("Cleared Flight Level Changed:"))
+                {
+                    Text = $"Sending to {msg.Station}";
                 }
 
                 if (msg.State == MessageState.Uplink || msg.State == MessageState.Finished || msg.State == MessageState.ADSC)
@@ -486,6 +493,11 @@ namespace vatACARS.Components
                 {
                     TelexMessage message = (TelexMessage)selectedMsg;
                     string resp = string.Join("\n", response.Where(obj => obj != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element)).Replace("@", "");
+                    if (resp.Length == 0)
+                    {
+                        ErrorHandler.GetInstance().AddError("No message to send");
+                        return;
+                    }
                     FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "telex", resp);
 
                     if (selectedMsg.Content == "(no message received)")
@@ -507,17 +519,24 @@ namespace vatACARS.Components
                 }
                 else if (selectedMsg is CPDLCMessage message1)
                 {
-                    var responseCode = "N";
-                    if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "R")) responseCode = "R"; // TODO: Fix priorities here
-                    if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "Y")) responseCode = "Y";
+                    var responseCode = "NE";
                     if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "W/U")) responseCode = "WU";
+                    if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "A/N")) responseCode = "AN";
+                    if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "R")) responseCode = "R";
+                    if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "Y")) responseCode = "Y";
+                    if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "NE")) responseCode = "NE";
                     CPDLCMessage message = message1;
                     string encodedMessage = string.Join("\n", response.Where(obj => obj != null && obj.Entry != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element));
+                    if (encodedMessage.Length == 0) 
+                    {
+                        ErrorHandler.GetInstance().AddError("No message to send");
+                        return;
+                    }
                     string resp = $"/data2/{SentMessages}/{message.MessageId}/{responseCode}/{encodedMessage}";
                     if (resp.EndsWith("@")) resp = resp.Substring(0, resp.Length - 1);
                     FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", resp);
 
-                    if (selectedMsg.Content == "(no message received)")
+                    if (selectedMsg.Content == "(no message received)" || selectedMsg.Content.Contains("Cleared Flight Level Changed:"))
                     {
                         addSentCPDLCMessage(new SentCPDLCMessage()
                         {
@@ -747,7 +766,7 @@ namespace vatACARS.Components
                         fillWindow.QuickFillDataChanged += (object s, QuickFillData data) =>
                         {
                             var placesub = (item.Placeholder.Substring(1, item.Placeholder.Length - 2).ToUpper());
-                            string setting = Regex.Replace(data.Setting, @"\s", string.Empty);
+                            string setting = data.Setting;
                             if (placesub == "UNIT NAME")
                             {
                                 item.UserValue = Regex.Replace(setting, @"[\d\.]", string.Empty);
@@ -756,9 +775,13 @@ namespace vatACARS.Components
                             {
                                 item.UserValue = Regex.Replace(setting, @"[^\d\.]", string.Empty);
                             }
-                            else
+                            else if (placesub == "FREE TEXT")
                             {
                                 item.UserValue = setting;
+                            }
+                            else
+                            {
+                                item.UserValue = Regex.Replace(setting, @"\s", string.Empty);
                             }
                             currentresponselabel.Refresh();
                         };
