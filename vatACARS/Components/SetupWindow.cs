@@ -7,7 +7,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using vatACARS.Properties;
 using vatACARS.Util;
 using vatsys;
 using static vatACARS.Helpers.Transceiver;
@@ -64,6 +63,33 @@ namespace vatACARS
         private void btn_auralAlertVolumeTest_MouseUp(object sender, MouseEventArgs e)
         {
             AudioInterface.playSound("incomingMessage");
+        }
+
+        private void btn_backup_Click(object sender, EventArgs e)
+        {
+            string dataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "vatACARS");
+            string backupFilePath = Path.Combine(dataPath, "settings_backup.json");
+
+            var settings = new Dictionary<string, object>
+            {
+                {"vatACARSToken", Properties.Settings.Default.vatACARSToken},
+                {"hoppiesLogonCode", Properties.Settings.Default.hoppiesLogonCode},
+                {"finishedMessageTimeout", Properties.Settings.Default.finishedMessageTimeout},
+                {"auralAlertVolume", Properties.Settings.Default.auralAlertVolume},
+                {"enableHoppies", Properties.Settings.Default.enableHoppies},
+                {"sendReports", Properties.Settings.Default.sendReports}
+            };
+
+            if (File.Exists(backupFilePath))
+            {
+                File.SetAttributes(backupFilePath, File.GetAttributes(backupFilePath) & ~(FileAttributes.Hidden | FileAttributes.ReadOnly));
+            }
+
+            File.WriteAllText(backupFilePath, JsonConvert.SerializeObject(settings, Formatting.Indented));
+
+            File.SetAttributes(backupFilePath, File.GetAttributes(backupFilePath) | FileAttributes.Hidden | FileAttributes.ReadOnly);
+            SetupWindow_Shown(sender, null);
+            logger.Log("Settings backed up.");
         }
 
         private void btn_checkStationCode_Click(object sender, EventArgs e)
@@ -271,6 +297,33 @@ namespace vatACARS
             Properties.Settings.Default.Save();
         }
 
+        private void btn_restore_Click(object sender, EventArgs e)
+        {
+            string dataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "vatACARS");
+            string backupFilePath = Path.Combine(dataPath, "settings_backup.json");
+
+            if (File.Exists(backupFilePath))
+            {
+                var settings = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(backupFilePath));
+
+                Properties.Settings.Default.vatACARSToken = settings["vatACARSToken"].ToString();
+                Properties.Settings.Default.hoppiesLogonCode = settings["hoppiesLogonCode"].ToString();
+                Properties.Settings.Default.finishedMessageTimeout = Convert.ToInt32(settings["finishedMessageTimeout"]);
+                Properties.Settings.Default.auralAlertVolume = Convert.ToInt32(settings["auralAlertVolume"]);
+                Properties.Settings.Default.enableHoppies = Convert.ToBoolean(settings["enableHoppies"]);
+                Properties.Settings.Default.sendReports = Convert.ToBoolean(settings["sendReports"]);
+
+                Properties.Settings.Default.Save();
+                SetupWindow_Shown(sender, null);
+                logger.Log("Settings restored.");
+            }
+            else
+            {
+                ErrorHandler.GetInstance().AddError("No backup file found.");
+                SetupWindow_Shown(sender, null);
+            }
+        }
+
         private void btn_sendreports_MouseUp(object sender, MouseEventArgs e)
         {
             Properties.Settings.Default.sendReports = !Properties.Settings.Default.sendReports;
@@ -280,39 +333,45 @@ namespace vatACARS
             Properties.Settings.Default.Save();
         }
 
-        private void SetupWindow_Shown(object sender, EventArgs e)
+        private void Default_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            tbx_stationCode.Text = Properties.Settings.Default.stationCode;
-            tbx_stationCode.Enabled = false;
-            tbx_vatACARSToken.Text = Properties.Settings.Default.vatACARSToken;
-            tbx_hoppiesLogonCode.Text = Properties.Settings.Default.hoppiesLogonCode;
-            tbx_messageTimeout.Text = Properties.Settings.Default.finishedMessageTimeout.ToString();
-            sld_auralAlertVolume.Value = Properties.Settings.Default.auralAlertVolume;
+            switch (e.PropertyName)
+            {
+                case "vatACARSToken":
+                    tbx_vatACARSToken.Text = Properties.Settings.Default.vatACARSToken;
+                    break;
 
-            btn_enableHoppies.Text = Properties.Settings.Default.enableHoppies ? "\u2713" : "";
-            btn_enableHoppies.Invalidate();
-            btn_sendreports.Text = Properties.Settings.Default.sendReports ? "\u2713" : "";
-            btn_sendreports.Invalidate();
+                case "hoppiesLogonCode":
+                    tbx_hoppiesLogonCode.Text = Properties.Settings.Default.hoppiesLogonCode;
+                    break;
 
-            SetReports(Properties.Settings.Default.sendReports);
-            SetHoppies(Properties.Settings.Default.enableHoppies);
-            tbx_hoppiesLogonCode.Enabled = Properties.Settings.Default.enableHoppies;
+                case "finishedMessageTimeout":
+                    tbx_messageTimeout.Text = Properties.Settings.Default.finishedMessageTimeout.ToString();
+                    break;
+
+                case "auralAlertVolume":
+                    sld_auralAlertVolume.Value = Properties.Settings.Default.auralAlertVolume;
+                    break;
+
+                case "enableHoppies":
+                    btn_enableHoppies.Text = Properties.Settings.Default.enableHoppies ? "\u2713" : "";
+                    btn_enableHoppies.Invalidate();
+                    tbx_hoppiesLogonCode.Enabled = Properties.Settings.Default.enableHoppies;
+                    break;
+
+                case "sendReports":
+                    btn_sendreports.Text = Properties.Settings.Default.sendReports ? "\u2713" : "";
+                    btn_sendreports.Invalidate();
+                    break;
+            }
 
             string dataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "vatACARS");
             string backupFilePath = Path.Combine(dataPath, "settings_backup.json");
-            btn_restore.Enabled = File.Exists(backupFilePath) && !DoSettingsMatchBackup();
-
-            if (connected)
-            {
-                foreach (Control ctl in Controls) if (ctl is GenericButton || ctl is TextField) ctl.Enabled = false;
-                btn_auralAlertVolumeTest.Enabled = true;
-                tbx_messageTimeout.Enabled = true;
-
-                btn_connect.Text = "Disconnect";
-                btn_connect.Enabled = true;
-                lbl_statusMessage.Text = $"Logged in as {tbx_stationCode.Text}";
-            }
+            bool backupFileExists = File.Exists(backupFilePath);
+            btn_restore.Enabled = backupFileExists && !DoSettingsMatchBackup();
+            btn_backup.Enabled = !backupFileExists || !DoSettingsMatchBackup();
         }
+
         private bool DoSettingsMatchBackup()
         {
             string dataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "vatACARS");
@@ -350,44 +409,44 @@ namespace vatACARS
             }
             else
             {
-               //Do nothing
+                //Do nothing
             }
 
             return false;
         }
 
-        private void Default_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void SetupWindow_Shown(object sender, EventArgs e)
         {
-            switch (e.PropertyName)
-            {
-                case "vatACARSToken":
-                    tbx_vatACARSToken.Text = Properties.Settings.Default.vatACARSToken;
-                    break;
-                case "hoppiesLogonCode":
-                    tbx_hoppiesLogonCode.Text = Properties.Settings.Default.hoppiesLogonCode;
-                    break;
-                case "finishedMessageTimeout":
-                    tbx_messageTimeout.Text = Properties.Settings.Default.finishedMessageTimeout.ToString();
-                    break;
-                case "auralAlertVolume":
-                    sld_auralAlertVolume.Value = Properties.Settings.Default.auralAlertVolume;
-                    break;
-                case "enableHoppies":
-                    btn_enableHoppies.Text = Properties.Settings.Default.enableHoppies ? "\u2713" : "";
-                    btn_enableHoppies.Invalidate();
-                    tbx_hoppiesLogonCode.Enabled = Properties.Settings.Default.enableHoppies;
-                    break;
-                case "sendReports":
-                    btn_sendreports.Text = Properties.Settings.Default.sendReports ? "\u2713" : "";
-                    btn_sendreports.Invalidate();
-                    break;
-            }
+            tbx_stationCode.Text = Properties.Settings.Default.stationCode;
+            tbx_stationCode.Enabled = false;
+            tbx_vatACARSToken.Text = Properties.Settings.Default.vatACARSToken;
+            tbx_hoppiesLogonCode.Text = Properties.Settings.Default.hoppiesLogonCode;
+            tbx_messageTimeout.Text = Properties.Settings.Default.finishedMessageTimeout.ToString();
+            sld_auralAlertVolume.Value = Properties.Settings.Default.auralAlertVolume;
+
+            btn_enableHoppies.Text = Properties.Settings.Default.enableHoppies ? "\u2713" : "";
+            btn_enableHoppies.Invalidate();
+            btn_sendreports.Text = Properties.Settings.Default.sendReports ? "\u2713" : "";
+            btn_sendreports.Invalidate();
+
+            SetReports(Properties.Settings.Default.sendReports);
+            SetHoppies(Properties.Settings.Default.enableHoppies);
+            tbx_hoppiesLogonCode.Enabled = Properties.Settings.Default.enableHoppies;
 
             string dataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "vatACARS");
             string backupFilePath = Path.Combine(dataPath, "settings_backup.json");
-            bool backupFileExists = File.Exists(backupFilePath);
-            btn_restore.Enabled = backupFileExists && !DoSettingsMatchBackup();
-            btn_backup.Enabled = !backupFileExists || !DoSettingsMatchBackup();
+            btn_restore.Enabled = File.Exists(backupFilePath) && !DoSettingsMatchBackup();
+
+            if (connected)
+            {
+                foreach (Control ctl in Controls) if (ctl is GenericButton || ctl is TextField) ctl.Enabled = false;
+                btn_auralAlertVolumeTest.Enabled = true;
+                tbx_messageTimeout.Enabled = true;
+
+                btn_connect.Text = "Disconnect";
+                btn_connect.Enabled = true;
+                lbl_statusMessage.Text = $"Logged in as {tbx_stationCode.Text}";
+            }
         }
 
         private void sld_auralAlertVolume_Scroll(object sender, EventArgs e)
@@ -427,59 +486,6 @@ namespace vatACARS
             {
                 Properties.Settings.Default.vatACARSToken = tbx_vatACARSToken.Text;
                 Properties.Settings.Default.Save();
-            }
-        }
-        private void btn_backup_Click(object sender, EventArgs e)
-        {
-            string dataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "vatACARS");
-            string backupFilePath = Path.Combine(dataPath, "settings_backup.json");
-
-            var settings = new Dictionary<string, object>
-            {
-                {"vatACARSToken", Properties.Settings.Default.vatACARSToken},
-                {"hoppiesLogonCode", Properties.Settings.Default.hoppiesLogonCode},
-                {"finishedMessageTimeout", Properties.Settings.Default.finishedMessageTimeout},
-                {"auralAlertVolume", Properties.Settings.Default.auralAlertVolume},
-                {"enableHoppies", Properties.Settings.Default.enableHoppies},
-                {"sendReports", Properties.Settings.Default.sendReports}
-            };
-
-            if (File.Exists(backupFilePath))
-            {
-                File.SetAttributes(backupFilePath, File.GetAttributes(backupFilePath) & ~(FileAttributes.Hidden | FileAttributes.ReadOnly));
-            }
-
-            File.WriteAllText(backupFilePath, JsonConvert.SerializeObject(settings, Formatting.Indented));
-
-            File.SetAttributes(backupFilePath, File.GetAttributes(backupFilePath) | FileAttributes.Hidden | FileAttributes.ReadOnly);
-            SetupWindow_Shown(sender, null);
-            logger.Log("Settings backed up.");
-        }
-
-        private void btn_restore_Click(object sender, EventArgs e)
-        {
-            string dataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "vatACARS");
-            string backupFilePath = Path.Combine(dataPath, "settings_backup.json");
-
-            if (File.Exists(backupFilePath))
-            {
-                var settings = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(backupFilePath));
-
-                Properties.Settings.Default.vatACARSToken = settings["vatACARSToken"].ToString();
-                Properties.Settings.Default.hoppiesLogonCode = settings["hoppiesLogonCode"].ToString();
-                Properties.Settings.Default.finishedMessageTimeout = Convert.ToInt32(settings["finishedMessageTimeout"]);
-                Properties.Settings.Default.auralAlertVolume = Convert.ToInt32(settings["auralAlertVolume"]);
-                Properties.Settings.Default.enableHoppies = Convert.ToBoolean(settings["enableHoppies"]);
-                Properties.Settings.Default.sendReports = Convert.ToBoolean(settings["sendReports"]);
-
-                Properties.Settings.Default.Save();
-                SetupWindow_Shown(sender, null);
-                logger.Log("Settings restored.");
-            }
-            else
-            {
-                ErrorHandler.GetInstance().AddError("No backup file found.");
-                SetupWindow_Shown(sender, null);
             }
         }
     }

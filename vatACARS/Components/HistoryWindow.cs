@@ -178,6 +178,20 @@ namespace vatACARS.Components
             lbl_acid.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
         }
 
+        private void tbx_acid_TextChanged(object sender, EventArgs e)
+        {
+            tbx_acid.Text = tbx_acid.Text.ToUpper();
+            tbx_acid.SelectionStart = tbx_acid.Text.Length;
+            lvw_messages.Items.Clear();
+            lvw_messages.Invalidate();
+            string selectedCallsign = tbx_acid.Text;
+            SelectedStation = stations.FirstOrDefault(s => s.Callsign == selectedCallsign);
+            if (SelectedStation != null)
+            {
+                LoadHistoryForSelectedStation();
+            }
+        }
+
         private void UpdateCPDLCList(object sender, CPDLCMessage message)
         {
             if (InvokeRequired)
@@ -231,20 +245,6 @@ namespace vatACARS.Components
                 return;
             }
             tbx_acid_TextChanged(sender, EventArgs.Empty);
-        }
-
-        private void tbx_acid_TextChanged(object sender, EventArgs e)
-        {
-            tbx_acid.Text = tbx_acid.Text.ToUpper();
-            tbx_acid.SelectionStart = tbx_acid.Text.Length;
-            lvw_messages.Items.Clear();
-            lvw_messages.Invalidate();
-            string selectedCallsign = tbx_acid.Text;
-            SelectedStation = stations.FirstOrDefault(s => s.Callsign == selectedCallsign);
-            if (SelectedStation != null)
-            {
-                LoadHistoryForSelectedStation();
-            }
         }
     }
 }

@@ -34,7 +34,7 @@ namespace vatACARS.Util
                 msg.Callsign = Recipient;
                 msg.Recipient = ClientInformation.Callsign;
             }
-            else 
+            else
             {
                 msg.Callsign = ClientInformation.Callsign;
                 msg.Recipient = Recipient;

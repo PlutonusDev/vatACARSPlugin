@@ -44,6 +44,28 @@ namespace vatACARS.Components
             UpdateMessages();
         }
 
+        public static void ShowEditorWindow(IMessageData msg)
+        {
+            foreach (Form form in Application.OpenForms)
+            {
+                if (form is EditorWindow && ((EditorWindow)form).selectedMsg == msg)
+                {
+                    if (form.Visible)
+                    {
+                        form.BringToFront();
+                        return;
+                    }
+                    else
+                    {
+                        form.Close();
+                    }
+                }
+            }
+            EditorWindow window = new EditorWindow();
+            window.selectedMsg = msg;
+            window.Show(ActiveForm);
+        }
+
         public void AddMessage(TelexMessage message)
         {
             try
@@ -410,28 +432,6 @@ namespace vatACARS.Components
         private void scr_messages_Scroll(object sender, EventArgs e)
         {
             lvw_messages.SetScrollPosVert(scr_messages.PercentageValue);
-        }
-
-        public static void ShowEditorWindow(IMessageData msg)
-        {
-            foreach (Form form in Application.OpenForms)
-            {
-                if (form is EditorWindow && ((EditorWindow)form).selectedMsg == msg)
-                {
-                    if (form.Visible)
-                    {
-                        form.BringToFront();
-                        return;
-                    }
-                    else
-                    {
-                        form.Close();
-                    }
-                }
-            }
-            EditorWindow window = new EditorWindow();
-            window.selectedMsg = msg;
-            window.Show(ActiveForm);
         }
 
         private void StyleComponent()

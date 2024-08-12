@@ -23,8 +23,8 @@ namespace vatACARS.Helpers
         private static List<string> ClosingMessages = new List<string>() { "WILCO", "UNABLE", "ROGER", "STANDBY", "AFFIRM", "NEGATIVE" };
         private static List<CPDLCMessage> CPDLCMessages = new List<CPDLCMessage>();
         private static Logger logger = new Logger("Transceiver");
-        private static List<SentCPDLCMessage> SentCPDLCMessages = new List<SentCPDLCMessage>();
         private static List<(SentCPDLCMessage, DateTime)> recentSentCPDLCMessages = new List<(SentCPDLCMessage, DateTime)>();
+        private static List<SentCPDLCMessage> SentCPDLCMessages = new List<SentCPDLCMessage>();
         private static List<Station> Stations = new List<Station>();
         private static List<TelexMessage> TelexMessages = new List<TelexMessage>();
 
@@ -113,10 +113,6 @@ namespace vatACARS.Helpers
                 ErrorHandler.GetInstance().AddError($"Station Already Exists: {station.Callsign}");
             }
         }
-        public static List<SentCPDLCMessage> GetRecentSentCPDLCMessages()
-        {
-            return recentSentCPDLCMessages.Select(m => m.Item1).ToList();
-        }
 
         public static void addTelexMessage(TelexMessage message)
         {
@@ -147,6 +143,11 @@ namespace vatACARS.Helpers
         public static TelexMessage[] getAllTelexMessages()
         {
             return TelexMessages.ToArray();
+        }
+
+        public static List<SentCPDLCMessage> GetRecentSentCPDLCMessages()
+        {
+            return recentSentCPDLCMessages.Select(m => m.Item1).ToList();
         }
 
         public static void removeStation(this Station station)
@@ -305,6 +306,7 @@ namespace vatACARS.Helpers
             if (message is TelexMessage) TelexMessages.Remove((TelexMessage)message);
             MessageUpdated.Invoke(null, message);
         }
+
         public static class ClientInformation
         {
             public static string Callsign = "";

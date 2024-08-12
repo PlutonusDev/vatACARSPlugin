@@ -527,7 +527,7 @@ namespace vatACARS.Components
                     if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "NE")) responseCode = "NE";
                     CPDLCMessage message = message1;
                     string encodedMessage = string.Join("\n", response.Where(obj => obj != null && obj.Entry != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element));
-                    if (encodedMessage.Length == 0) 
+                    if (encodedMessage.Length == 0)
                     {
                         ErrorHandler.GetInstance().AddError("No message to send");
                         return;
