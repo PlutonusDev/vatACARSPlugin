@@ -757,7 +757,7 @@ namespace vatACARS.Components
                         fillWindow.QuickFillDataChanged += (object s, QuickFillData data) =>
                         {
                             var placesub = (item.Placeholder.Substring(1, item.Placeholder.Length - 2).ToUpper());
-                            string setting = Regex.Replace(data.Setting, @"\s", string.Empty);
+                            string setting = data.Setting;
                             if (placesub == "UNIT NAME")
                             {
                                 item.UserValue = Regex.Replace(setting, @"[\d\.]", string.Empty);
@@ -766,9 +766,13 @@ namespace vatACARS.Components
                             {
                                 item.UserValue = Regex.Replace(setting, @"[^\d\.]", string.Empty);
                             }
-                            else
+                            else if (placesub == "FREE TEXT")
                             {
                                 item.UserValue = setting;
+                            }
+                            else
+                            {
+                                item.UserValue = Regex.Replace(setting, @"\s", string.Empty);
                             }
                             currentresponselabel.Refresh();
                         };
