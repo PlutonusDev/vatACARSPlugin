@@ -65,7 +65,7 @@ namespace vatACARS.Components
                 var msg = (TelexMessage)selectedMsg;
 
                 this.Text = $"Replying to {msg.Station}";
-                string[] msgSplit = CutString(msg.Content);
+                string[] msgSplit = CutString(msg.Content.Replace("\n", ""));
                 ListViewItem lvMsg = new ListViewItem(msg.TimeReceived.ToString("HH:mm"));
                 lvMsg.SubItems.Add($"{msgSplit[0]}");
                 lvMsg.Font = MMI.eurofont_winsml;
@@ -108,11 +108,20 @@ namespace vatACARS.Components
             else if (selectedMsg is CPDLCMessage msg)
             {
                 Text = $"Replying to {msg.Station}";
+                string[] msgSplit = CutString(msg.Content.Replace("\n", ""));
                 ListViewItem lvMsg = new ListViewItem(msg.TimeReceived.ToString("HH:mm"));
-                lvMsg.SubItems.Add($"{msg.Content}");
+                lvMsg.SubItems.Add($"{msgSplit[0]}");
                 lvMsg.Font = MMI.eurofont_winsml;
 
                 lvw_messages.Items.Add(lvMsg);
+
+                foreach (string msgPart in msgSplit.Skip(1))
+                {
+                    ListViewItem lvMsgPart = new ListViewItem("");
+                    lvMsgPart.SubItems.Add($"{msgPart}");
+                    lvMsgPart.Font = MMI.eurofont_winsml;
+                    lvw_messages.Items.Add(lvMsgPart);
+                }
 
                 if (msg.State == MessageState.Uplink || msg.State == MessageState.Finished || msg.State == MessageState.ADSC)
                 {
