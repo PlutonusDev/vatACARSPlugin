@@ -148,9 +148,11 @@ namespace vatACARS.Components
             this.MiddleClickClose = false;
             this.MinimumSize = new System.Drawing.Size(537, 342);
             this.Name = "HistoryWindow";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "History Window";
             this.Load += new System.EventHandler(this.HistoryWindow_Load);
             this.ResizeEnd += new System.EventHandler(this.HistoryWindow_ResizeEnd);
+            this.LocationChanged += new System.EventHandler(this.HistoryWindow_LocationChanged);
             this.SizeChanged += new System.EventHandler(this.HistoryWindow_SizeChanged);
             this.insetPanel2.ResumeLayout(false);
             this.ResumeLayout(false);
